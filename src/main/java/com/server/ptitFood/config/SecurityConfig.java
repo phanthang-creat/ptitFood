@@ -1,6 +1,7 @@
 package com.server.ptitFood.config;
 
-import com.server.ptitFood.domain.User.repositories.UserRepository;
+import com.server.ptitFood.config.dsrouting.DataSourceSwitchInterceptor;
+import com.server.ptitFood.domain.repositories.UserRepository;
 import com.server.ptitFood.security.Jwt.JwtTokenAuthenticationFilter;
 import com.server.ptitFood.security.Jwt.JwtTokenProvider;
 import org.springframework.context.annotation.Bean;
@@ -21,6 +22,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 public class SecurityConfig {
+
+    public SecurityConfig(DataSourceSwitchInterceptor dataSourceSwitchInterceptor) {
+    }
+
     @Bean
     public SecurityFilterChain filterChain(
             HttpSecurity http,

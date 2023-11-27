@@ -1,7 +1,7 @@
 package com.server.ptitFood.common.interceptors;
 
-import com.server.ptitFood.domain.User.exceptions.UserAlreadyExistException;
-import com.server.ptitFood.domain.User.exceptions.UsernameOrPasswordNotValid;
+import com.server.ptitFood.domain.exceptions.UserAlreadyExistException;
+import com.server.ptitFood.domain.exceptions.UsernameOrPasswordNotValid;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
