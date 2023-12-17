@@ -17,15 +17,10 @@ public class OTP {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false, name = "fullname", columnDefinition = "VARCHAR(255) NOT NULL")
-    private String fullName;
 
     @Getter
     @Column(nullable = false, name = "username", columnDefinition = "VARCHAR(255) NOT NULL")
     private String userName;
-
-    @Column(nullable = false, name = "password", length = 64, columnDefinition = "VARCHAR(64) NOT NULL")
-    private String password;
 
     @Column(nullable = false, name = "email", columnDefinition = "VARCHAR(255) NOT NULL")
     private String email;

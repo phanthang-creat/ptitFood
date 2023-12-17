@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html
+        lang="en"
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{web/admin/dashBoardLayout.html}">
+<head>
+    <title>Danh mục</title>
+</head>
+<body>
+<section class="row" layout:fragment="content">
+    <div class="col mt-4">
+        <div class="card">
+            <div class="card-header">Danh sách danh mục</div>
+            <div class="card-body">
+                <div
+                        th:if="${message != null}"
+                        class="alert alert-primary"
+                        role="alert"
+                >
+                    <i>[[${message}]]</i>
+                </div>
+                <div class="row my-2">
+                    <div class="col">
+                        <form th:action="@{/admin/categories}">
+                            <div class="form-inline float-left">
+                                <label for="ten">Tên:</label>
+                                <input
+                                        type="text"
+                                        class="form-control ml-1"
+                                        name="ten"
+                                        id="ten"
+                                        aria-describedby="helpId"
+                                        placeholder="Tên"
+                                />
+                                <button class="btn btn-outline-primary ml-1">Tìm kiếm</button>
+                            </div>
+                        </form>
+                        <div class="float-right">
+                            <a
+                                    class="btn btn-outline-primary"
+                                    th:href="@{/admin/categories/add}"
+                            >Thêm danh mục</a
+                            >
+                        </div>
+                    </div>
+                </div>
+                <div class="row" th:if="${(currentPage == null) || !currentPage.hasContent()}">
+                    <div class="col">
+                        <div class="alert alert-danger" role="alert">
+                            <strong>Không tìm danh mục</strong>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table
+                            class="table table-striped table-inverse"
+                            th:if="${currentPage != null && currentPage.hasContent()}"
+                    >
+                        <thead class="thead-inverse">
+                        <tr>
+                            <th>Id</th>
+                            <th>Tên</th>
+                            <th>Link</th>
+                            <th>Danh mục</th>
+                            <th>Sắp xếp</th>
+                            <th>Trạng thái</th>
+                            <th>Thao tác</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="item , iStat : ${items}">
+                            <td th:text="${item.getId()}"></td>
+                            <td th:text="${item.getName()}"></td>
+                            <td th:text="${item.getLink()}"></td>
+                            <td th:text="${item.getParentId() == null ? 'Không có' : item.getParentId().getName()}"></td>
+                            <td th:text="${item.getOrder() == null ? 'Mặc định' : item.getOrder()}"></td>
+                            <td th:text="${item.getStatus() == 1 ? 'Hoạt động' : 'Không hoạt động'}"></td>
+                            <td>
+                                <a
+                                        th:href="@{'/admin/categories/edit/' + ${item.getId()}}"
+                                        class="btn btn-outline-warning"
+                                ><i class="fas fa-edit"></i
+                                ></a>
+                                <a
+                                        th:data-id="${item.getId()}"
+                                        th:data-name="${item.getName()}"
+                                        onclick="showConfirmModelDialog(this.getAttribute('data-id'),this.getAttribute('data-name'))"
+                                        class="btn btn-outline-danger"
+                                ><i class="fas fa-recycle"></i
+                                ></a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <script>
+                    const showConfirmModelDialog = (id, name) => {
+                        $("#productName").text(name);
+                        $("#yesOption").attr("action", "/admin/categories/delete/" + id)
+                        $("#confirmationId").modal("show");
+                    };
+                </script>
+                <!-- Modal -->
+                <div
+                        class="modal fade"
+                        id="confirmationId"
+                        tabindex="-1"
+                        role="dialog"
+                        aria-labelledby="modelTitleId"
+                        aria-hidden="true"
+                >
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Xác nhận</h5>
+                                <button
+                                        type="button"
+                                        class="close"
+                                        data-dismiss="modal"
+                                        aria-label="Close"
+                                >
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                Bạn có muốn xóa " <span id="productName"></span>"?
+                            </div>
+                            <div class="modal-footer">
+                                <form action="" method="post" id="yesOption">
+                                    <button
+                                            class="btn btn-danger"
+                                    >Có</button
+                                ></form>
+                                <button
+                                        type="button"
+                                        class="btn btn-secondary"
+                                        data-dismiss="modal"
+                                >
+                                    Không
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer text-muted" th:if="${currentPage != null && currentPage.hasContent()}">
+                <form action="" method="post">
+                    <div class="form-inline float-left">
+                        <label for="size">Page Size: </label>
+                        <select
+                                class="form-control"
+                                name="size"
+                                id="size"
+                                onchange="this.form.submit()"
+                        >
+                            <option th:selected="${currentPage.size == 5}" value="5">
+                                5
+                            </option>
+                            <option th:selected="${currentPage.size == 10}" value="10">
+                                10
+                            </option>
+                        </select>
+                    </div>
+
+                    <nav
+                            aria-label="Page navigation"
+                            th:if="${currentPage.totalPages > 0}"
+                    >
+                        <ul class="pagination justify-content-center">
+                            <li
+                                    th:class="${1 == currentPage.number + 1} ? 'page-item active' : 'page-item' "
+                            >
+                                <a
+                                        th:href="@{/admin/categories(size=${currentPage.size},page=${0})}"
+                                        th:class="page-link"
+                                >
+                                    First
+                                </a>
+                            </li>
+                            <li
+                                    class="page-item active"
+                                    th:each="pageNumber : ${pageNumbers}"
+                                    th:if="${currentPage.totalPages > 1}"
+                                    th:class="${pageNumber == currentPage.number +1 } ? 'page-item active ' : 'page-item'"
+                            >
+                                <a
+                                        th:href="@{/admin/categories(ten=${name}, size=${currentPage.size},page=${pageNumber - 1})}"
+                                        th:class="page-link"
+                                        th:text="${pageNumber}"
+                                >1</a
+                                >
+                            </li>
+                            <li
+                                    th:class="${currentPage.totalPages - 1 == currentPage.number} ? 'page-item active' : 'page-item' "
+                            >
+                                <a
+                                        th:href="@{/admin/categories(name=${name}, size=${currentPage.size},page=${currentPage.totalPages -1})}"
+                                        th:class="page-link"
+                                >
+                                    Last
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

@@ -1,9 +1,7 @@
 package com.server.ptitFood.config;
 
-import freemarker.cache.ClassTemplateLoader;
-import freemarker.cache.FileTemplateLoader;
-import freemarker.cache.TemplateLoader;
-import freemarker.template.Configuration;
+import nz.net.ultraq.thymeleaf.layoutdialect.LayoutDialect;
+import nz.net.ultraq.thymeleaf.layoutdialect.decorators.strategies.GroupingStrategy;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -12,7 +10,6 @@ import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 import org.thymeleaf.templateresolver.FileTemplateResolver;
@@ -78,6 +75,7 @@ public class EmailConfiguration {
         SpringTemplateEngine templateEngine = new SpringTemplateEngine();
         templateEngine.setTemplateResolver(templateResolver);
         templateEngine.setTemplateEngineMessageSource(emailMessageSource());
+        templateEngine.addDialect(new LayoutDialect(new GroupingStrategy()));
         return templateEngine;
     }
 
@@ -99,26 +97,6 @@ public class EmailConfiguration {
         templateResolver.setTemplateMode("HTML");
         templateResolver.setCharacterEncoding("UTF-8");
         return templateResolver;
-    }
-
-    @Bean
-    public FreeMarkerConfigurer freemarkerClassLoaderConfig() {
-        Configuration configuration = new Configuration(Configuration.VERSION_2_3_27);
-        TemplateLoader templateLoader = new ClassTemplateLoader(this.getClass(), "/" + mailTemplatesPath);
-        configuration.setTemplateLoader(templateLoader);
-        FreeMarkerConfigurer freeMarkerConfigurer = new FreeMarkerConfigurer();
-        freeMarkerConfigurer.setConfiguration(configuration);
-        return freeMarkerConfigurer;
-    }
-
-    @Bean
-    public FreeMarkerConfigurer freemarkerFilesystemConfig() throws IOException {
-        Configuration configuration = new Configuration(Configuration.VERSION_2_3_27);
-        TemplateLoader templateLoader = new FileTemplateLoader(new File(mailTemplatesPath));
-        configuration.setTemplateLoader(templateLoader);
-        FreeMarkerConfigurer freeMarkerConfigurer = new FreeMarkerConfigurer();
-        freeMarkerConfigurer.setConfiguration(configuration);
-        return freeMarkerConfigurer;
     }
 
     @Bean

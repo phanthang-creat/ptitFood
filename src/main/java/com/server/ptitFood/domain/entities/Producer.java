@@ -1,6 +1,5 @@
 package com.server.ptitFood.domain.entities;
 
-import com.server.ptitFood.domain.entities.Admin;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,28 +20,28 @@ public class Producer {
     private String name;
 
     @Column(nullable = false, name = "code", columnDefinition = "VARBINARY(600) NOT NULL")
-    private String link;
+    private String code;
 
     @Column(nullable = false, name = "keyword", columnDefinition = "varbinary(600) NOT NULL")
-    private Integer level;
+    private String keyword;
 
-    @Column(nullable = false, name = "created_at", columnDefinition = "DATETIME")
-    private Date createdAt;
+    @Column(nullable = false, name = "created", columnDefinition = "DATETIME")
+    private Date created;
 
     @ManyToOne
     @JoinColumn(name = "created_by", referencedColumnName = "id")
     private Admin createdBy;
 
     @Column(nullable = false, name = "updated", columnDefinition = "DATETIME")
-    private Date updatedAt;
+    private Date updated;
 
     @ManyToOne
     @JoinColumn(name = "updated_by", referencedColumnName = "id")
     private Admin updatedBy;
 
     @Column(nullable = false, name = "status", columnDefinition = "INT(1)")
-    private Boolean status;
+    private Integer status;
 
     @Column(nullable = false, name = "trash", columnDefinition = "INT(1)")
-    private Boolean trash;
+    private Integer trash;
 }

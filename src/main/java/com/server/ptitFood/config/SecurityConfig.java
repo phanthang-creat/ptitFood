@@ -2,10 +2,12 @@ package com.server.ptitFood.config;
 
 import com.server.ptitFood.config.dsrouting.DataSourceSwitchInterceptor;
 import com.server.ptitFood.domain.repositories.UserRepository;
+import com.server.ptitFood.domain.repositories.AdminRepository;
 import com.server.ptitFood.security.Jwt.JwtTokenAuthenticationFilter;
 import com.server.ptitFood.security.Jwt.JwtTokenProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -21,6 +23,7 @@ import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
+//@Order(2)
 public class SecurityConfig {
 
     public SecurityConfig(DataSourceSwitchInterceptor dataSourceSwitchInterceptor) {
@@ -31,15 +34,28 @@ public class SecurityConfig {
             HttpSecurity http,
             JwtTokenProvider jwtTokenProvider
     ) throws Exception {
+
         http
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
-                .exceptionHandling(c -> c.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
+                .exceptionHandling((e) -> {
+                    e.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
+                            .accessDeniedPage("/auth?rolefail");
+                })
                 .authorizeHttpRequests((authorizeHttpRequests) ->
                         authorizeHttpRequests
+//                                .requestMatchers("/admin/auth/**").permitAll()
                                 .requestMatchers("/auth/**").permitAll()
+                                .requestMatchers("/static/**").permitAll()
+                                .requestMatchers("/error").permitAll()
+                                .requestMatchers("/WEB/**", "/CNPM/**").permitAll()
+                                .requestMatchers("/customer/auth/**").permitAll()
+                                .requestMatchers("/admin/**").hasRole("ADMIN")
+                                .requestMatchers(("/app/**")).hasRole("CUSTOMER")
                                 .anyRequest().authenticated()
                 )
+                .formLogin(AbstractHttpConfigurer::disable)
+                .logout(AbstractHttpConfigurer::disable)
                 .addFilterBefore(
                         new JwtTokenAuthenticationFilter(jwtTokenProvider),
                         UsernamePasswordAuthenticationFilter.class
@@ -60,10 +76,9 @@ public class SecurityConfig {
         return authentication -> {
             String username = authentication.getPrincipal() + "";
             String password = authentication.getCredentials() + "";
+            String id = authentication.getDetails() + "";
 
             UserDetails user = userDetailsService.loadUserByUsername(username);
-
-            System.out.println(user);
 
             if (!encoder.matches(password, user.getPassword())) {
                 System.out.println("password: " + password);

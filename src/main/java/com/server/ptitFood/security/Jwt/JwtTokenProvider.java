@@ -3,9 +3,6 @@ package com.server.ptitFood.security.Jwt;
 import io.jsonwebtoken.*;
 
 import jakarta.annotation.PostConstruct;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -13,14 +10,13 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
-
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.util.Collection;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 @Component
-@Slf4j
 public class JwtTokenProvider {
     private static final String AUTHORITIES_KEY = "roles";
 
@@ -54,22 +50,24 @@ public class JwtTokenProvider {
 
             String username = authentication.getName();
 
-            Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+            String scope = authentication.getAuthorities().stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .collect(Collectors.joining(" "));
 
             long now = (new Date()).getTime();
 
             String token = Jwts.builder()
                     .setSubject(username)
-                    .claim(AUTHORITIES_KEY, authorities)
-                    .signWith(SignatureAlgorithm.RS512, privateKey)
+                    .claim(AUTHORITIES_KEY, scope)
+                    .signWith(SignatureAlgorithm.RS256, privateKey)
                     .setExpiration(new Date(now + 3600000))
                     .compact();
 
-            System.out.println("Token: " + token);
+//            System.out.println("Token: " + token);
 
             redisTemplate.opsForValue().set(username, publicKey);
 
-            System.out.println("Redis: " + redisTemplate.opsForValue().get(username));
+//            System.out.println("Redis: " + redisTemplate.opsForValue().get(username));
 
             return token;
         }
@@ -79,6 +77,14 @@ public class JwtTokenProvider {
         }
     }
 
+    public String getUsernameFromToken(String token) {
+        return Jwts.parser()
+                .setSigningKey(publicKey)
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
+    }
+
     public Authentication getAuthentication(String token) {
         Claims claims = Jwts.parser()
                 .setSigningKey(publicKey)
@@ -86,7 +92,9 @@ public class JwtTokenProvider {
                 .getBody();
 
         Collection<? extends GrantedAuthority> authorities =
-                AuthorityUtils.commaSeparatedStringToAuthorityList((String) claims.get(AUTHORITIES_KEY));
+                AuthorityUtils.commaSeparatedStringToAuthorityList(
+                        claims.get(AUTHORITIES_KEY).toString()
+                );
 
         User principal = new User(claims.getSubject(), "", authorities);
 
@@ -98,7 +106,6 @@ public class JwtTokenProvider {
             Jws<Claims> claims = Jwts.parser().setSigningKey(publicKey).parseClaimsJws(token);
             return !claims.getBody().getExpiration().before(new Date());
         } catch (JwtException | IllegalArgumentException e) {
-            log.error("Expired or invalid JWT token");
             return false;
         }
     }

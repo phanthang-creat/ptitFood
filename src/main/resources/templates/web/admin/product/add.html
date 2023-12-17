@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{web/admin/dashBoardLayout}">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Thêm sản phẩm</title>
+</head>
+
+<body>
+<section class="row" layout:fragment="content">
+    <div class="col mt-4">
+        <form th:object="${currentDto}" onsubmit="submitForm()" id="form" method="post" th:action="@{/admin/products/add}">
+            <div class="card">
+                <div class="card-header">
+                    <h2 th:text="${currentDto.isEdit ? 'Chỉnh sửa thông tin sản phẩm' : ' Thêm sản phẩm'}">Sản phẩm
+                    </h2>
+                </div>
+                <div class="card-body">
+                    <div th:if="${message != null}" class="alert alert-danger" role="alert">
+                        <i>[[${message}]]</i>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col">
+                            <div class="form-outline">
+                                <label class="form-label" for="name">Tên sản pẩm</label>
+                                <input type="text" name="name" id="name" placeholder="Tên sản pẩm" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col">
+                            <div class="form-outline">
+                                <label class="form-label" for="alias">Đường dẫn</label>
+                                <input type="text" name="alias" id="alias" placeholder="Đường dẫn" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+
+                    <!--          DISPLAY NONE              -->
+                        <label for="avatar">
+                        </label>
+                        <input type="hidden" name="avatar" id="avatar" placeholder="" value="" />
+                        <label for="image">
+                        </label>
+                        <input type="hidden" name="image" id="image" placeholder="" value="" />
+                        <!--                       -->
+
+                        <div class="container col-md-6">
+                            <div class="mb-5">
+                                <label for="formFile" class="form-label">Avatar</label>
+                                <input class="form-control" type="file" id="formFile" onchange="preview('formFile', 'frame')">
+                                <button onclick="clearImage('formFile', 'frame')" type="button" class="btn btn-primary mt-3">Clear</button>
+                            </div>
+                            <img id="frame" src="" class="img-fluid" alt="" />
+                        </div>
+
+                        <div class="container col-md-6">
+                            <div class="mb-5">
+                                <label for="formFile" class="form-label">Image</label>
+                                <input class="form-control" type="file" id="formFile-2" onchange="preview('formFile-2', 'frame-2')">
+                                <button onclick="clearImage('formFile-2', 'frame-2')" type="button" class="btn btn-primary mt-3">Clear</button>
+                            </div>
+                            <img id="frame-2" src="" class="img-fluid" alt="" />
+                        </div>
+
+                        <script>
+                            function preview(idForm, idFrame) {
+                                // console.log(document.getElementById('formFile').files[0]);
+                                // document.getElementById('frame').src = URL.createObjectURL(document.getElementById('formFile').files[0]);
+                                console.log(idForm, idFrame);
+                                document.getElementById(idFrame).src = URL.createObjectURL(document.getElementById(idForm).files[0]);
+                            }
+                            function clearImage(idForm, idFrame) {
+                                // document.getElementById('formFile').value = null;
+                                // document.getElementById('frame').src = "";
+                                document.getElementById(idForm).value = null;
+                                document.getElementById(idFrame).src = "";
+                            }
+                        </script>
+                    </div>
+                    <div class="row mb-4">
+
+                    <!--          Detail              -->
+                        <div class="col">
+                            <div class="form-outline">
+                                <label class="form-label" for="detail">Chi tiết sản phẩm</label>
+                                <input type="text" name="detail" id="detail" placeholder="Chi tiết" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+
+                    <!--          Price              -->
+                        <div class="col">
+                            <div class="form-outline">
+                                <label class="form-label" for="price">Giá</label>
+                                <input type="number" name="price" id="price" placeholder="Giá" class="form-control" />
+                            </div>
+                        </div>
+
+                        <!--          Price sale              -->
+                        <div class="col">
+                            <div class="form-outline">
+                                <label class="form-label" for="priceSale">Giá giảm</label>
+                                <input type="number" name="priceSale" id="priceSale" placeholder="Giá giảm" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                    <!--          Số lượng trong kho              -->
+                        <div class="col">
+                            <div class="form-outline">
+                                <label class="form-label" for="number">Số lượng trong kho</label>
+                                <input type="number" name="number" id="number" placeholder="Số lượng trong kho" class="form-control" />
+                            </div>
+                        </div>
+
+                        <!--          Số lượng trong kho              -->
+                        <div class="col">
+                            <div class="form-outline">
+                                <label class="form-label" for="numberBuy">Số lượng bán</label>
+                                <input type="number" name="numberBuy" id="numberBuy" placeholder="Số lượng bán" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <!--          Danh mục              -->
+                        <div class="col">
+                            <div class="form-outline">
+                                <label for="catId">
+                                    Danh mục sản phẩm
+                                </label>
+                                <div class="input-group mb-3">
+                                    <select class="custom-select" id="catId" name="catId">
+                                        <option selected value="null">Không có</option>
+                                        <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--          Nhà cung cấp              -->
+                        <div class="col">
+                            <div class="form-outline">
+                                <label for="producerId">
+                                    Nhà cung cấp
+                                </label>
+                                <div class="input-group mb-3">
+                                    <select class="custom-select" id="producerId" name="producerId">
+                                        <option selected value="null">Không có</option>
+                                        <option th:each="producer : ${producers}" th:value="${producer.id}" th:text="${producer.name}"></option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col">
+                            <div class="form-outline">
+                                <label for="status">
+                                    Trạng thái
+                                </label>
+                                <div class="input-group mb-3">
+                                    <select class="custom-select" id="status" name="status">
+                                        <option selected value="1">Hoạt động</option>
+                                        <option value="2">Không hoạt động</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer text-muted">
+                    <button type="reset" class="btn btn-secondary">Reset</button>
+                    <a th:href="@{/admin/producers}" class="btn btn-success text-white">Danh sách khách hàng</a>
+                    <button class="btn btn-primary" onclick="submitForm()" type="button">
+                        <i class="fas fa-save"></i>
+                        <span th:if="${currentDto.isEdit}">Cập nhập</span>
+                        <span th:unless=" ${currentDto.isEdit}">Lưu</span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        function onUpload() {
+            return new Promise((resolve, reject) => {
+                fileUpload('formFile', 'avatar').then(() => {
+                    fileUpload('formFile-2', 'image').then(() => {
+                        resolve();
+                    });
+                });
+            });
+        }
+
+        function submitForm() {
+            onUpload().then(() => {
+                document.getElementById('form').submit();
+            });
+        }
+
+        function fileUpload(idForm, inputId) {
+            // const file = document.getElementById(idForm).files[0];
+            // const formData = new FormData();
+            // formData.append("image", file);
+            // fetch('/admin/upload/image', {
+            //     method: 'POST',
+            //     body: formData
+            // }).then(res => res.json())
+            // .then(res => {
+            //     document.getElementById(inputId).value = res.fileName;
+            // })
+            // .catch(err => console.log(err));
+
+            return new Promise((resolve, reject) => {
+                const file = document.getElementById(idForm).files[0];
+                const formData = new FormData();
+                formData.append("image", file);
+                fetch('/admin/upload/image', {
+                    method: 'POST',
+                    body: formData
+                }).then(res => res.json())
+                .then(res => {
+                    document.getElementById(inputId).value = res.fileName;
+                    resolve();
+                })
+                .catch(err => console.log(err));
+            });
+        }
+    </script>
+</section>
+</body>
+
+</html>

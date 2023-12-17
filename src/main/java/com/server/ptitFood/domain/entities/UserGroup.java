@@ -26,15 +26,8 @@ public class UserGroup {
     @Column(nullable = false, name = "created", columnDefinition = "DATETIME")
     private Date created;
 
-    @ManyToOne
-    @JoinColumn(name = "created_by", referencedColumnName = "id")
-    private UserGroup createdBy;
-
     @Column(nullable = false, name = "updated", columnDefinition = "DATETIME")
-    private Date modified;
-
-    @Column(nullable = false, name = "updated_by", columnDefinition = "INT(11)")
-    private Integer modifiedBy;
+    private Date updated;
 
     @Column(nullable = false, name = "trash", columnDefinition = "TINYINT(1) DEFAULT 0")
     private Integer trash;

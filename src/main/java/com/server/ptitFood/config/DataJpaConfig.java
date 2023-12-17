@@ -1,9 +1,7 @@
 package com.server.ptitFood.config;
 
 import com.server.ptitFood.config.dsrouting.DataSourceRouter;
-import com.server.ptitFood.domain.dto.customer.Username;
-import com.server.ptitFood.domain.entities.Customer;
-import com.server.ptitFood.domain.entities.Product;
+import com.server.ptitFood.domain.dto.Username;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -27,7 +25,6 @@ import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Properties;
 
 @Configuration
 @EnableJpaRepositories(
@@ -81,7 +78,7 @@ public class DataJpaConfig {
     ) {
         return builder
                 .dataSource(dataSource)
-                .packages(Product.class, Customer.class)
+                .packages("com.server.ptitFood.domain.entities")
                 .persistenceUnit("ptitfood")
                 .build();
     }

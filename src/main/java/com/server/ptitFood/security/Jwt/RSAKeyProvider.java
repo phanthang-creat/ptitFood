@@ -27,7 +27,6 @@ public class RSAKeyProvider {
     private static Map<String, Object> generateRSAKeys() throws Exception {
         KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
         keyPairGenerator.initialize(2048);
-
         KeyPair keyPair = keyPairGenerator.generateKeyPair();
         return Map.of("private", keyPair.getPrivate(), "public", keyPair.getPublic());
     }

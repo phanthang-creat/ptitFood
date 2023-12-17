@@ -1,6 +1,5 @@
 package com.server.ptitFood.domain.entities;
 
-import com.server.ptitFood.domain.entities.Admin;
 import jakarta.persistence.*;
 import lombok.*;
 

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{web/admin/dashBoardLayout}">
+
+<head>
+  <meta charset="UTF-8">
+  <title th:text="${currentDto.getName()}"></title>
+</head>
+
+<body>
+<section class="row" layout:fragment="content">
+  <div class="col mt-4">
+    <form th:action="@{/admin/categories/edit/{id}(id=${currentDto.getId()})}" method="post" th:object="${currentDto}">
+      <div class="card">
+        <div class="card-header">
+          <h2 th:text="${currentDto.getName()}"></h2>
+        </div>
+        <div class="card-body">
+          <div th:if="${message != null}" class="alert alert-danger" role="alert">
+            <i>[[${message}]]</i>
+          </div>
+          <div class="row mb-4">
+            <div class="col-2">
+              <div class="form-group">
+                <label for="id">Id</label>
+                <input type="text" class="form-control" name="id" id="id" th:value="${currentDto.getId()}"
+                 aria-describedby="idHid" placeholder="Mã nhà cung cấp..." readonly th:field="*{id}" />
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-outline">
+                <label class="form-label" for="name">Tên</label>
+                <input type="text" name="name" id="name" th:value="${currentDto.getName()}" placeholder="Tên danh mục" class="form-control" />
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="form-outline">
+                <label class="form-label" for="link">Link</label>
+                <input type="text" name="link" id="link" th:value="${currentDto.getLink()}" placeholder="Link nhà cung cấp..." class="form-control" />
+              </div>
+            </div>
+            </div>
+            <div class="row">
+            <div class="col">
+              <div class="form-outline">
+                <label for="parentId">
+                  Danh mục cha
+                </label>
+                <div class="input-group mb-3">
+                  <select class="custom-select" id="parentId" name="parentId">
+                    <option selected="selected" th:if="${currentDto.getParentId() == null}" value="null">Không có</option>
+                    <option
+                            th:each="category : ${categories}"
+                            th:value="${category.id}"
+                            th:text="${category.name}"
+                            th:selected="${currentDto.getParentId() == category.id}"
+                    ></option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="col">
+              <div class="form-outline">
+                <label for="status">
+                  Trạng thái
+                </label>
+                <div class="input-group mb-3">
+                  <select class="custom-select" id="status" name="status">
+                    <option th:selected="${currentDto.getStatus() == 1}" value="1">Hoạt động</option>
+                    <option th:selected="${currentDto.getStatus() == 2}" value="2">Không hoạt động</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer text-muted">
+          <button type="reset" class="btn btn-secondary">Reset</button>
+          <button class="btn btn-primary">
+            <i class="fas fa-save"></i>
+            <span th:if="${currentDto.isEdit}">Cập nhập</span>
+            <span th:unless=" ${currentDto.isEdit}">Lưu</span>
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>
+</body>
+
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{web/admin/dashBoardLayout}">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Thêm nhà cung cấp</title>
+</head>
+
+<body>
+<section class="row" layout:fragment="content">
+    <div class="col mt-4">
+        <form th:action="@{/admin/categories/add}" method="post" th:object="${category}">
+            <div class="card">
+                <div class="card-header">
+                    <h2 th:text="${category.isEdit ? 'Chỉnh sửa thông nhà cung cấp' : ' Thêm nhà cung cấp'}">Nhà cung cấp
+                    </h2>
+                </div>
+                <div class="card-body">
+                    <div th:if="${message != null}" class="alert alert-danger" role="alert">
+                        <i>[[${message}]]</i>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col">
+<!--                            <div class="form-group d-none">-->
+<!--                                <label for="id">ID</label>-->
+<!--                                <input type="hidden" th:field="*{isEdit}" />-->
+<!--                                <input type="text" class="form-control" name="id" id="id"-->
+<!--                                       aria-describedby="categoryIdHid" placeholder="Mã nhà cung cấp..." readonly />-->
+<!--                            </div>-->
+                            <div class="form-outline">
+                                <label class="form-label" for="name">Tên</label>
+                                <input type="text" name="name" id="name" placeholder="Tên danh mục" class="form-control" />
+<!--                                <small th:if="${#fields.hasErrors()}" id="nameHip" class="form-text text-muted"><span-->
+<!--                                        th:errors="*{}" style="color: red"></span></small>-->
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-outline">
+                                <label class="form-label" for="link">Link</label>
+                                <input type="text" name="link" id="link" placeholder="Link" class="form-control" />
+                            </div>
+                        </div>
+                    <!--            keyword            -->
+                        <div class="col">
+                            <div class="form-outline">
+                                <label for="parentId">
+                                    Danh mục cha
+                                </label>
+                                <div class="input-group mb-3">
+                                    <select class="custom-select" id="parentId" name="parentId">
+                                        <option selected value="null">Không có</option>
+                                        <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-outline">
+                                <label for="status">
+                                    Trạng thái
+                                </label>
+                                <div class="input-group mb-3">
+                                    <select class="custom-select" id="status" name="status">
+                                        <option selected value="1">Hiện</option>
+                                        <option value="2">Ẩn</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer text-muted">
+                    <button type="reset" class="btn btn-secondary">Reset</button>
+                    <a th:href="@{/admin/categories}" class="btn btn-success text-white">Danh sách khách hàng</a>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-save"></i>
+                        <span th:if="${category.isEdit}">Cập nhập</span>
+                        <span th:unless=" ${category.isEdit}">Lưu</span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+</body>
+
+</html>

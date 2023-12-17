@@ -26,8 +26,11 @@ public class DataSourceSwitchInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull Object handler) throws Exception {
+        System.out.println("DataSourceSwitchInterceptor" + request.getRequestURI());
         if (SecurityContextHolder.getContext().getAuthentication() != null) {
+            System.out.println(SecurityContextHolder.getContext().getAuthentication().getAuthorities());
             if (SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+                System.out.println("admin");
                 DataSourceContextHolder.setDataSource(adminDataSource); // Set adminDataSource for admin requests
             } else {
                 DataSourceContextHolder.setDataSource(userDataSource); // Set userDataSource for other requests

@@ -22,7 +22,6 @@ public class Customer implements UserDetails {
     @Column(nullable = false, name = "fullname", columnDefinition = "VARCHAR(255)")
     private String fullName;
 
-    @Getter
     @Column(nullable = false, name = "username", columnDefinition = "VARCHAR(100) UNIQUE NOT NULL")
     private String userName;
 
@@ -35,14 +34,17 @@ public class Customer implements UserDetails {
     @Column(nullable = false, name = "phone", length = 15, columnDefinition = "VARBINARY(600)")
     private String phone;
 
+    @Column(nullable = false, name = "otp", columnDefinition = "VARCHAR(6)")
+    private String otp;
+
     @Column(nullable = false, name = "created", columnDefinition = "DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP")
     private Date created;
 
     @Column(nullable = false, name = "trash", columnDefinition = "INT(1) DEFAULT 0")
-    private Boolean trash;
+    private Integer trash;
 
     @Column(nullable = false, name = "status", columnDefinition = "INT(1) DEFAULT 1")
-    private Boolean status;
+    private Integer status;
 
     @Column(nullable = false, name = "updated", columnDefinition = "DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     private Date updated;
@@ -63,21 +65,21 @@ public class Customer implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return this.status;
+        return this.status == 1;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return this.status;
+        return this.status == 1;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return this.status;
+        return this.status == 1;
     }
 
     @Override
     public boolean isEnabled() {
-        return this.status;
+        return this.status == 1;
     }
 }

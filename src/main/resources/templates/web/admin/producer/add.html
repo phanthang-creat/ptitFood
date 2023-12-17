@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{web/admin/dashBoardLayout}">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Thêm nhà cung cấp</title>
+</head>
+
+<body>
+<section class="row" layout:fragment="content">
+    <div class="col mt-4">
+        <form th:action="@{/admin/producers/add}" method="post" th:object="${producer}">
+            <div class="card">
+                <div class="card-header">
+                    <h2 th:text="${producer.isEdit ? 'Chỉnh sửa thông nhà cung cấp' : ' Thêm nhà cung cấp'}">Nhà cung cấp
+                    </h2>
+                </div>
+                <div class="card-body">
+                    <div th:if="${message != null}" class="alert alert-danger" role="alert">
+                        <i>[[${message}]]</i>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col">
+                            <div class="form-group d-none">
+                                <label>ID</label>
+                                <input type="hidden" th:field="*{isEdit}" />
+                                <input type="text" class="form-control" name="id" id="id"
+                                       aria-describedby="categoryIdHid" placeholder="Mã nhà cung cấp..." readonly />
+                            </div>
+                            <div class="form-outline">
+                                <label class="form-label" for="name">Tên</label>
+                                <input type="text" name="name" id="name" placeholder="Tên nhà cung cấp..." class="form-control" />
+<!--                                <small th:if="${#fields.hasErrors()}" id="nameHip" class="form-text text-muted"><span-->
+<!--                                        th:errors="*{}" style="color: red"></span></small>-->
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-outline">
+                                <label class="form-label" for="code">Code</label>
+                                <input type="text" name="code" id="code" placeholder="Code nhà cung cấp..." class="form-control" />
+
+                            </div>
+                        </div>
+                    <!--            keyword            -->
+                        <div class="col">
+                            <div class="form-outline">
+                                <label class="form-label" for="keywork">Keywork</label>
+                                <input type="text" name="keywork" id="keywork" placeholder="Keywork nhà cung cấp..." class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-outline">
+                                <label for="status">
+                                    Trạng thái
+                                </label>
+                                <div class="input-group mb-3">
+                                    <select class="custom-select" id="status" name="status">
+                                        <option selected value="1">Hoạt động</option>
+                                        <option value="2">Không hoạt động</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer text-muted">
+                    <button type="reset" class="btn btn-secondary">Reset</button>
+                    <a th:href="@{/admin/producers}" class="btn btn-success text-white">Danh sách khách hàng</a>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-save"></i>
+                        <span th:if="${producer.isEdit}">Cập nhập</span>
+                        <span th:unless=" ${producer.isEdit}">Lưu</span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+</body>
+
+</html>

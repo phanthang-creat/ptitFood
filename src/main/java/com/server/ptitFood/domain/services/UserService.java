@@ -4,25 +4,22 @@ import com.server.ptitFood.MailService.EmailServiceImpl;
 import com.server.ptitFood.common.helper.CommonHelper;
 import com.server.ptitFood.common.helper.encoding.EncodingHelper;
 import com.server.ptitFood.domain.entities.OTP;
-import com.server.ptitFood.domain.repositories.otp.OtpRepository;
+import com.server.ptitFood.domain.repositories.OtpRepository;
 import com.server.ptitFood.domain.exceptions.UserAlreadyExistException;
 import com.server.ptitFood.domain.exceptions.UsernameOrPasswordNotValid;
-import com.server.ptitFood.domain.dto.customer.LoginDto;
-import com.server.ptitFood.domain.dto.customer.RegisterDto;
-import com.server.ptitFood.domain.dto.customer.VerifyEmailDto;
+import com.server.ptitFood.domain.dto.LoginDto;
+import com.server.ptitFood.domain.dto.RegisterDto;
+import com.server.ptitFood.domain.dto.VerifyEmailDto;
 import com.server.ptitFood.domain.entities.Customer;
 import com.server.ptitFood.domain.repositories.UserRepository;
-import com.server.ptitFood.domain.repositories.userGroup.UserGroupRepository;
-
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.server.ptitFood.domain.repositories.UserGroupRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class UserService {
@@ -57,9 +54,6 @@ public class UserService {
             throw new UserAlreadyExistException("Password and confirm password not match");
         }
 
-        if (checkUserExistInDBOtp(registerDto)) {
-            throw new UserAlreadyExistException("Please wait 3 minutes to resend OTP");
-        }
 
         Map<String, String> props = new HashMap<>();
         Map<String, Object> templateModel = new HashMap<>();
@@ -67,69 +61,54 @@ public class UserService {
         props.put("otp", otpCode);
         templateModel.put("props", props);
 
+        Customer newUser = serializerToUser(registerDto, otpCode);
+
+        try {
+            userRepository.insertCustomerWithOtp(
+                    newUser.getFullName(),
+                    newUser.getUsername(),
+                    newUser.getPassword(),
+                    newUser.getEmail()
+            );
+        } catch (Exception e) {
+            throw new UserAlreadyExistException("Username or email already exist");
+        }
+
         try {
             mailService.sendMessageUsingThymeleafTemplate(registerDto.getEmail(), "PTIT", templateModel);
         } catch (Exception e) {
             throw new UserAlreadyExistException("Email not valid");
         }
 
-        OTP otp = serializerToOTP(registerDto);
-
-        otp.setOtp(otpCode);
-
-        otpRepository.save(otp);
-
+        try {
+            otpRepository.save(serializerToOTP(registerDto, otpCode));
+        } catch (Exception e) {
+            throw new UserAlreadyExistException("OTP not valid");
+        }
     }
 
     private boolean checkUserExistInDBUser(String email, String username) {
-        return userRepository.findUserByEmail(email).isPresent() ||
-                userRepository.findUserByUserName(username).isPresent();
+        return userRepository.selectCustomerByEmailOrUsername(username, email).isPresent();
     }
 
-    private boolean checkUserExistInDBOtp(RegisterDto registerDto) {
-        OTP otp = otpRepository.findAll(
-                Specification
-                        .where(
-                                OtpRepository.findByEmailOrUserName(
-                                        registerDto.getEmail(), registerDto.getUsername()
-                                )))
-                .stream()
-                .findFirst()
-                .orElse(null);
-
-        if (otp == null) {
-            return false;
-        }
-
-        return otp.getCreated().getTime() + 3 * 60 * 1000 > System.currentTimeMillis();
-    }
-
-    private Customer serializerToUser(OTP otp) {
-
-
+    private Customer serializerToUser(RegisterDto registerDto, String otp) {
         Customer user = new Customer();
-        user.setUserName(otp.getUserName());
-        user.setPassword(otp.getPassword());
-        user.setEmail(otp.getEmail());
-        user.setFullName(otp.getFullName().trim().strip());
-        user.setStatus(Boolean.TRUE);
-        user.setTrash(Boolean.FALSE);
-        user.setUserGroup(userGroupRepository.findUserGroupById(1));
-        user.setCreated(new Date());
-        user.setUpdated(new Date());
-
+        user.setFullName(registerDto.getFullName());
+        user.setUserName(registerDto.getUsername());
+        user.setEmail(registerDto.getEmail());
+        user.setPassword(registerDto.getPassword());
+        user.setUserGroup(userGroupRepository.findUserGroupById(3));
+        user.setOtp(otp);
         return user;
     }
 
-    private OTP serializerToOTP(RegisterDto registerDto) {
+    private OTP serializerToOTP(RegisterDto registerDto, String o) {
         OTP otp = new OTP();
+        otp.setOtp(o);
         otp.setUserName(registerDto.getUsername());
-        otp.setPassword(EncodingHelper.hashPassword(registerDto.getPassword()));
         otp.setEmail(registerDto.getEmail());
-        otp.setFullName(registerDto.getFullName().trim().strip());
         otp.setStatus(Boolean.FALSE);
         otp.setCreated(new Date());
-        otp.setUpdated(new Date());
         return otp;
     }
 
@@ -149,10 +128,6 @@ public class UserService {
     }
 
     public void verify(VerifyEmailDto verifyEmailDto) throws UserAlreadyExistException {
-        if (checkUserExistInDBUser(verifyEmailDto.getEmail(), "")) {
-            throw new UserAlreadyExistException("Email or username already exist");
-        }
-
         OTP otp = otpRepository.findAll(
                 Specification
                         .where(
@@ -174,11 +149,20 @@ public class UserService {
         if (otp.getCreated().getTime() + 3 * 60 * 1000 < System.currentTimeMillis()) {
             throw new UserAlreadyExistException("OTP expired");
         }
+    }
 
-        Customer user = serializerToUser(otp);
+    public Page<Customer> selectCustomerDecryption(Pageable pageable) {
 
-        userRepository.save(user);
+        List<Customer> list = userRepository.selectCustomerDecryption();
 
-        otpRepository.delete(otp);
+        return new PageImpl<>(list, pageable, list.size());
+    }
+
+    public Page<Customer> findAll(Pageable pageable) {
+        return userRepository.findAll(pageable);
+    }
+
+    public Page<Customer> findByUsernameContaining(String username, Pageable pageable) {
+        return userRepository.findByUsernameContaining(username, pageable);
     }
 }

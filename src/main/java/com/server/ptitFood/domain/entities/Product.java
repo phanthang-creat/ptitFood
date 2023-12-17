@@ -1,24 +1,61 @@
 package com.server.ptitFood.domain.entities;
 
-import com.server.ptitFood.domain.entities.Admin;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.sql.Date;
 
-@Table(name = "db_slider")
+@Table(name = "db_product")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false, name = "name", columnDefinition = "VARCHAR(255) NOT NULL")
+    @ManyToOne
+    @JoinColumn(name = "cat_id", referencedColumnName = "id")
+    private Category category;
+
+    @Column(nullable = false, name = "name", columnDefinition = "VARBINARY(600) NOT NULL")
     private String name;
 
-    @Column(nullable = false, name = "link", columnDefinition = "VARCHAR(255) NOT NULL")
-    private String link;
+    @Column(nullable = false, name = "alias", columnDefinition = "VARBINARY(600) NOT NULL")
+    private String alias;
 
     @Column(nullable = false, name = "img", columnDefinition = "VARCHAR(255) NOT NULL")
     private String img;
+
+    @Column(nullable = false, name = "avatar", columnDefinition = "VARCHAR(255) NOT NULL")
+    private String avatar;
+
+    @Column(nullable = false, name = "sort_desc", columnDefinition = "INT")
+    private Integer sortDesc;
+
+    @Column(nullable = false, name = "detail", columnDefinition = "TEXT")
+    private String detail;
+
+    @ManyToOne
+    @JoinColumn(name = "producer" , referencedColumnName = "id")
+    private Producer producer;
+
+    @Column(nullable = false, name = "price", columnDefinition = "INT(11) NOT NULL")
+    private Integer price;
+
+//    @Column(nullable = false, name = "sale", columnDefinition = "INT(11)")
+//    private Integer sale;
+
+    @Column(nullable = false, name = "number", columnDefinition = "INT(11) NOT NULL")
+    private Integer number;
+
+    @Column(nullable = false, name = "number_buy", columnDefinition = "INT(11) NOT NULL")
+    private Integer numberBuy;
 
     @Column(nullable = false, name = "created", columnDefinition = "DATETIME")
     private Date created;
@@ -33,9 +70,6 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "updated_by", referencedColumnName = "id")
     private Admin updatedBy;
-
-    @Column(nullable = false, name = "trash", columnDefinition = "INT(1)")
-    private Boolean trash;
 
     @Column(nullable = false, name = "status", columnDefinition = "INT(1)")
     private Boolean status;

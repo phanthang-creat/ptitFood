@@ -7,9 +7,6 @@ import java.util.regex.Pattern;
 
 
 public class UsernameConstraintValidator implements ConstraintValidator<ValidUsername, String> {
-    @Override
-    public void initialize(ValidUsername arg0) {
-    }
 
     @Override
     public boolean isValid(String username, ConstraintValidatorContext context) {

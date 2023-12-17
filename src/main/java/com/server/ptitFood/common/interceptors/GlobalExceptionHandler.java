@@ -2,10 +2,13 @@ package com.server.ptitFood.common.interceptors;
 
 import com.server.ptitFood.domain.exceptions.UserAlreadyExistException;
 import com.server.ptitFood.domain.exceptions.UsernameOrPasswordNotValid;
+import io.jsonwebtoken.JwtException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -22,7 +25,7 @@ public class GlobalExceptionHandler {
     @ResponseBody
     public Map<String, String> handleValidationExceptions(
             MethodArgumentNotValidException ex) {
-//        System.out.println("Handle validation exception");
+        System.out.println("Handle validation exception");
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getAllErrors().forEach((error) -> {
             String fieldName = ((FieldError) error).getField();
@@ -36,7 +39,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     public Map<String, String> onConstraintValidationException(ConstraintViolationException e) {
-//        System.out.println("Handle constraint validation exception");
+        System.out.println("Handle constraint validation exception");
         Map<String, String> errors = new HashMap<>();
         e.getConstraintViolations().forEach((error) -> {
             String fieldName = error.getPropertyPath().toString();
@@ -50,7 +53,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     public Map<String, String> onHttpMessageNotReadableException(HttpMessageNotReadableException e) {
-//        System.out.println("Handle http message not readable exception");
+        System.out.println("Handle http message not readable exception");
         Map<String, String> errors = new HashMap<>();
         errors.put("message", "Required request body is missing");
         errors.put("status", "400");
@@ -63,7 +66,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     public Map<String, String> onUserAlreadyExistException(UserAlreadyExistException e) {
-//        System.out.println("Handle user already exist exception");
+        System.out.println("Handle user already exist exception");
         Map<String, String> errors = new HashMap<>();
         errors.put("message", e.getMessage());
         errors.put("status", "400");
@@ -72,7 +75,7 @@ public class GlobalExceptionHandler {
         return errors;
     }
 
-    @ExceptionHandler(Exception.class)
+    @ExceptionHandler(UsernameOrPasswordNotValid.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     public Map<String, String> onException(UsernameOrPasswordNotValid e) {
@@ -85,4 +88,29 @@ public class GlobalExceptionHandler {
         return errors;
     }
 
+
+    @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public Map<String, String> onException(HttpMediaTypeNotSupportedException e) {
+        System.out.println("Handle exception HttpMediaTypeNotSupportedException");
+        Map<String, String> errors = new HashMap<>();
+        errors.put("message", "Unsupported Media Type");
+        errors.put("status", "400");
+        errors.put("error", "Bad Request");
+        errors.put("code", GlobalErrorCode.UNSUPPORTED_MEDIA_TYPE);
+        return errors;
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ResponseBody
+    public Map<String, String> onException(BadCredentialsException e) {
+        System.out.println("Handle exception HttpClientErrorException.Unauthorized");
+        Map<String, String> errors = new HashMap<>();
+        errors.put("message", "Unauthorized");
+        errors.put("status", "401");
+        errors.put("error", "Unauthorized");
+        return errors;
+    }
 }
