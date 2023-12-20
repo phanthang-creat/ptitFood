@@ -15,10 +15,8 @@ public class RegisterDto {
     @ValidUsername(message = "Username is invalid.")
     private String username;
 
-    @ValidPassword(message = "Password is invalid.")
     private String password;
 
-    @ValidPassword(message = "Confirm Password is invalid.")
     private String confirmPassword;
 
     @Email(message = "Email is invalid.")
@@ -27,4 +25,13 @@ public class RegisterDto {
 
     @ValidVietnameseFullName(message = "Full name is invalid.")
     private String fullName;
+
+    public RegisterDto() {
+    }
+
+    public RegisterDto(String _username, String _email, String _fullName) {
+        this.username = _username;
+        this.email = _email;
+        this.fullName = _fullName;
+    }
 }

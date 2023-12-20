@@ -2,7 +2,7 @@ package com.server.ptitFood.controllers.admin;
 import com.server.ptitFood.domain.dto.LoginDto;
 import com.server.ptitFood.domain.entities.Admin;
 import com.server.ptitFood.domain.exceptions.UsernameOrPasswordNotValid;
-import com.server.ptitFood.domain.services.admin.AdminControlService;
+import com.server.ptitFood.domain.services.AdminControlService;
 import com.server.ptitFood.security.Jwt.JwtTokenProvider;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -85,8 +85,9 @@ public class AdminAuthentication {
             Cookie cookie = new Cookie("token", token);
             cookie.setPath("/");
             cookie.setMaxAge(60 * 60 * 24 * 30);
+            cookie.setHttpOnly(true);
+            cookie.setSecure(true);
             response.addCookie(cookie);
-
 
             return "redirect:/admin/home";
         } catch (Exception e) {

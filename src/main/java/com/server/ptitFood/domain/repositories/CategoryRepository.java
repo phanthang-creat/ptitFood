@@ -2,6 +2,7 @@ package com.server.ptitFood.domain.repositories;
 
 import com.server.ptitFood.domain.entities.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.query.Param;
 
@@ -47,4 +48,9 @@ public interface CategoryRepository extends JpaRepository<Category, Integer> {
             @Param("id_in") Integer id
     );
 
+    //	select id, cast(aes_decrypt(name, "nameNum") as char(100)) as name, cast(aes_decrypt(link, "link") as char(100)) as link, parent_id, `order`, created, created_by, updated, updated_by, status from db_category WHERE `id` = id_in;
+    @Query(value = "select id, cast(aes_decrypt(name, \"nameNum\") as char(100)) as name, cast(aes_decrypt(link, \"link\") as char(100)) as link, parent_id, `order`, created, created_by, updated, updated_by, status from db_category WHERE `id` = :id", nativeQuery = true)
+    Category selectCategoryDecryptionByIdQuery(
+            @Param("id") Integer id
+    );
 }

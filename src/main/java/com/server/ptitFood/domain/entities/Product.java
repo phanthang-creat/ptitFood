@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Formula;
 
 import java.sql.Date;
 
@@ -48,8 +49,8 @@ public class Product {
     @Column(nullable = false, name = "price", columnDefinition = "INT(11) NOT NULL")
     private Integer price;
 
-//    @Column(nullable = false, name = "sale", columnDefinition = "INT(11)")
-//    private Integer sale;
+    @Column(nullable = false, name = "price_sale", columnDefinition = "INT(11)")
+    private Integer priceSale;
 
     @Column(nullable = false, name = "number", columnDefinition = "INT(11) NOT NULL")
     private Integer number;
@@ -57,14 +58,14 @@ public class Product {
     @Column(nullable = false, name = "number_buy", columnDefinition = "INT(11) NOT NULL")
     private Integer numberBuy;
 
-    @Column(nullable = false, name = "created", columnDefinition = "DATETIME")
+    @Column(nullable = false, name = "created", columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
     private Date created;
 
     @ManyToOne
     @JoinColumn(name = "created_by", referencedColumnName = "id")
     private Admin createdBy;
 
-    @Column(nullable = false, name = "updated", columnDefinition = "DATETIME")
+    @Column(nullable = false, name = "updated", columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     private Date updated;
 
     @ManyToOne
@@ -72,6 +73,5 @@ public class Product {
     private Admin updatedBy;
 
     @Column(nullable = false, name = "status", columnDefinition = "INT(1)")
-    private Boolean status;
-
+    private Integer status;
 }

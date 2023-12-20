@@ -1,11 +1,14 @@
+
 package com.server.ptitFood.domain.entities;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.Set;
 
 @Data
 @Getter
@@ -34,14 +37,8 @@ public class Customer implements UserDetails {
     @Column(nullable = false, name = "phone", length = 15, columnDefinition = "VARBINARY(600)")
     private String phone;
 
-    @Column(nullable = false, name = "otp", columnDefinition = "VARCHAR(6)")
-    private String otp;
-
     @Column(nullable = false, name = "created", columnDefinition = "DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP")
     private Date created;
-
-    @Column(nullable = false, name = "trash", columnDefinition = "INT(1) DEFAULT 0")
-    private Integer trash;
 
     @Column(nullable = false, name = "status", columnDefinition = "INT(1) DEFAULT 1")
     private Integer status;
@@ -55,7 +52,7 @@ public class Customer implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return AuthorityUtils.createAuthorityList(this.userGroup.getName());
     }
 
     @Override

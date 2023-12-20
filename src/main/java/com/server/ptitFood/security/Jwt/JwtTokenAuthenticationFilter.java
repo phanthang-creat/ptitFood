@@ -31,6 +31,7 @@ public class JwtTokenAuthenticationFilter extends GenericFilterBean {
         System.out.println("doFilter on request: " + ((HttpServletRequest) request).getServletPath());
 
         if (token != null) {
+            System.out.println("Validating token: " + token);
             if (jwtTokenProvider.validateToken(token)) {
                 Authentication auth = jwtTokenProvider.getAuthentication(token);
                 if (auth != null && !(auth instanceof AnonymousAuthenticationToken)) {
@@ -47,8 +48,11 @@ public class JwtTokenAuthenticationFilter extends GenericFilterBean {
                 cookie.setMaxAge(0);
                 cookie.setPath("/");
                 ((HttpServletResponse) response).addCookie(cookie);
-                ((HttpServletResponse) response).sendRedirect("/auth/admin/login");
+                ((HttpServletResponse) response).sendRedirect("/auth/login");
             }
+        } else {
+            // Clear security context
+            SecurityContextHolder.clearContext();
         }
 
         filterChain.doFilter(request, response);

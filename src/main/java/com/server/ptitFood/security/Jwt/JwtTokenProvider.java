@@ -1,5 +1,8 @@
 package com.server.ptitFood.security.Jwt;
 
+import com.amazonaws.services.kms.AWSKMSClient;
+import com.amazonaws.services.kms.model.CreateKeyRequest;
+import com.amazonaws.services.kms.model.CreateKeyResult;
 import io.jsonwebtoken.*;
 
 import jakarta.annotation.PostConstruct;
@@ -26,6 +29,8 @@ public class JwtTokenProvider {
 
     private RSAPublicKey publicKey;
 
+    private AWSKMSClient kmsClient;
+
     public JwtTokenProvider(RedisTemplate<String, Object> redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
@@ -47,7 +52,6 @@ public class JwtTokenProvider {
 
     public String generateToken(Authentication authentication) {
         try {
-
             String username = authentication.getName();
 
             String scope = authentication.getAuthorities().stream()

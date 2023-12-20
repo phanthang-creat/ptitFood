@@ -6,142 +6,63 @@
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta charset="UTF-8">
-    <title>Trung tâm bảo hành xe</title>
     <!-- Import Boostrap css, js, font awesome here -->
-    <link rel="stylesheet" th:href="@{/style.css}">
+    <link rel="stylesheet" th:href="@{/static/style.css}">
   </head>
 
   <body>
     <!-- Navigation -->
     <header  >
       <div th:fragment="header" id="sticked-menu">
-        <div class="mainheader">
-          <div class="container newclearfix">
-            <h1 class="logo" id="logo-1">
-              <a th:href="@{/WEB}">
-                <img
-                  src="https://www.tranlegroup.com/Uploads/Image/logo-dep/4.JPG"
-                  alt="logo"
-                  height="40px"
-                />
+          <nav class="navbar navbar-expand-lg navbar-light bg-light">
+              <a class="navbar-brand" href="#">
+                  <img src="/static/images/logo2.png" alt="" style="width: 90px; height: auto">
               </a>
-            </h1>
-            <!-- NAVIGATION-->
-            <nav class="menu-wrapper menu-wrapper-float">
-              <ul class="default-menu mainmenu" id="mainmenu">
-                <li class="mainmenu-item">
-                  <a th:href="@{/CNPM}">
-                    <span class="menuoffset" >[[#{header.home}]]</span>
-                  </a>
-                </li>
-                <li class="mainmenu-item">
-                  <a href="#">
-                    <span class="menuoffset">[[#{header.aboutus}]]</span>
-                  </a>
-                </li>
-                <li class="mainmenu-item">
-                  <a href="#">
-                    <span class="menuoffset">[[#{header.service}]]</span>
-                  </a>
-                </li>
-                <li class="mainmenu-item">
-                  <a href="#">
-                    <span class="menuoffset">[[#{header.post}]]</span>
-                  </a>
-                </li>
-                <li class="mainmenu-item haschild">
-                  <a class="parent-link" href="">
-                    <span class="menuoffset">[[#{header.policy}]]</span>
-                  </a>
-                  <ul class="menulevel" style="width: 350px">
-                    <li>
-                      <a
-                        target="_blank"
-                        href="#"
-                      >
-                        <span class="menuoffset">Quy định bảo hành chung</span>
-                      </a>
-                    </li>
-                    <!-- <li>
-                      <a
-                        target="_blank"
-                        href="/web/frontend/file/HP-Bao-Hanh-1-doi-1-man-hinh.pdf"
-                      >
-                        <span class="menuoffset"
-                          >Bảo hành 1 đổi 1 màn hình</span
-                        >
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        target="_blank"
-                        href="/web/frontend/file/HP-Bao-hanh-1-doi-1-may-in.pdf"
-                      >
-                        <span class="menuoffset">Bảo hành 1 đổi 1 máy in</span>
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        target="_blank"
-                        href="/web/frontend/file/HP-Bao-Hanh-Tai-Nha-khach-hang.pdf"
-                      >
-                        <span class="menuoffset"
-                          >Bảo hành tại nhà khách hàng</span
-                        >
-                      </a>
-                    </li> -->
-                    <li>
-                      <a
-                        target="_blank"
-                        href="#"
-                      >
-                        <span class="menuoffset">Bảo hành theo hóa đơn</span>
-                      </a>
-                    </li>
-                    <!-- <li>
-                      <a
-                        target="_blank"
-                        href="/web/frontend/file/HP-Giao-va-Nhan-tai-nha.pdf"
-                      >
-                        <span class="menuoffset">Giao và nhận tại nhà</span>
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        target="_blank"
-                        href="/web/frontend/file/HP-Quy-dinh-bao-hanh-muc-in.pdf"
-                      >
-                        <span class="menuoffset">Quy định bảo hành mục in</span>
-                      </a>
-                    </li> -->
-                    <li>
-                      <a
-                        target="_blank"
-                        href="#"
-                      >
-                        <span class="menuoffset"
-                          >Quy định giới hạn bảo hành</span
-                        >
-                      </a>
-                    </li>
+              <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon"></span>
+              </button>
+
+              <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                  <ul class="navbar-nav mr-auto">
+                      <li class="nav-item active">
+                          <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+                      </li>
+                      <li class="nav-item">
+                          <a class="nav-link" href="#">Link</a>
+                      </li>
+                      <li class="nav-item dropdown">
+                          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              Dropdown
+                          </a>
+                          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                              <a class="dropdown-item" href="#">Action</a>
+                              <a class="dropdown-item" href="#">Another action</a>
+                              <div class="dropdown-divider"></div>
+                              <a class="dropdown-item" href="#">Something else here</a>
+                          </div>
+                      </li>
+                      <li class="nav-item">
+                          <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                      </li>
+                      <li>
+                          <i class="bi bi-cart"></i>
+                      </li>
                   </ul>
-                </li>
-                <li class="mainmenu-item">
-                  <a href="">
-                    <span class="menuoffset">[[#{header.contact}]]</span>
-                  </a>
-                </li>
-              </ul>
-            </nav>
-            <!-- END: NAVIGATION-->
-            <!--MENU BUTTON-->
-           <div>
-             Language :
-             <a href="?language=en">English</a>|
-             <a href="?language=vi_VN">Viet Nam</a>|
-             <a href="?language=ja_JP">Japanese</a>|
-          </div>
-        </div>
+                  <div class="my-2 my-lg-0">
+                      <button class="btn my-2 my-sm-0 bg-transparent" type="button">
+                          <img src="/static/images/cart.svg" alt="cart">
+                          <span th:text="${session.get('cart')}">
+
+                          </span>
+                      </button>
+                  </div>
+                  <div class="my-2 my-lg-0">
+                      <a class="btn my-2 my-sm-0 bg-transparent" href="/profile">
+                          <img src="/static/images/user.png" alt="profile" style="height: 16px; width: 16px;">
+                      </a>
+                  </div>
+              </div>
+          </nav>
       </div>
     </header>
   </body>

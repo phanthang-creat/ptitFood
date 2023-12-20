@@ -49,7 +49,7 @@
                                 </label>
                                 <div class="input-group mb-3">
                                     <select class="custom-select" id="parentId" name="parentId">
-                                        <option selected value="null">Không có</option>
+                                        <option selected value="">Không có</option>
                                         <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
                                     </select>
                                 </div>

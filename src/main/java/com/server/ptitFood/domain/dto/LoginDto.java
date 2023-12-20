@@ -13,7 +13,7 @@ public class LoginDto {
     @NotEmpty(message = "Username can not empty.")
     private String username;
 
-    @ValidPassword(message = "Password is invalid.")
+//    @ValidPassword(message = "Password is invalid.")
     private String password;
 
     public LoginDto() {

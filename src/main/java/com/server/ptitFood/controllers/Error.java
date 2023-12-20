@@ -7,7 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
+@Controller
 public class Error implements ErrorController {
     private static final String PATH = "/error";
 
@@ -21,7 +21,7 @@ public class Error implements ErrorController {
                 response.sendRedirect("/auth/login");
             }
         }
-        return "error";
+        return "/web/404";
     }
 
     public String getErrorPath() {

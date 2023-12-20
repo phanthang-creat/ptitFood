@@ -42,6 +42,4 @@ public class Producer {
     @Column(nullable = false, name = "status", columnDefinition = "INT(1)")
     private Integer status;
 
-    @Column(nullable = false, name = "trash", columnDefinition = "INT(1)")
-    private Integer trash;
 }

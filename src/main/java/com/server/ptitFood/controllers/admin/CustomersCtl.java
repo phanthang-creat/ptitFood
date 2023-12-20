@@ -3,7 +3,7 @@ package com.server.ptitFood.controllers.admin;
 import com.server.ptitFood.domain.dto.CustomerDto;
 import com.server.ptitFood.domain.entities.Customer;
 import com.server.ptitFood.domain.services.UserService;
-import com.server.ptitFood.domain.services.admin.AdminControlService;
+import com.server.ptitFood.domain.services.AdminControlService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -39,7 +39,6 @@ public class CustomersCtl {
             @RequestParam("size") Optional<Integer> size,
             Model model
     ) {
-
         int currentPage = page.orElse(0);
         int pageSize = size.orElse(5);
 
@@ -89,10 +88,6 @@ public class CustomersCtl {
         dto.setUsername(customer.getUsername());
         dto.setEmail(customer.getEmail());
         dto.setPhone(customer.getPhone());
-//            dto.setCreated(customer.getCreated());
-//            dto.setUpdated(customer.getUpdated());
-//            dto.setStatus(customer.getStatus());
-//            dto.setTrash(customer.getTrash());
         dto.setRole(customer.getUserGroup().getName());
         return dto;
     }

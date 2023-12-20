@@ -77,48 +77,25 @@
               >Nhà cung cấp</a
               >
             </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Quán lý xe</a>
-              <div class="dropdown-menu" aria-labelledby="dropdownId">
-                <a class="dropdown-item" th:href="@{/admin/loaixes}">Loại xe</a>
-                <a class="dropdown-item" th:href="@{/manager/cars}">Xe</a>
-              </div>
+            <li  sec:authorize="hasAuthority('ADMIN')" class="nav-item">
+              <a class="nav-link" th:href="@{/admin/discounts}"
+              >Discount</a
+              >
             </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="dropdownId" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Quán lý phụ tùng</a>
-              <div class="dropdown-menu" aria-labelledby="dropdownId">
-                <a class="dropdown-item" th:href="@{/manager/phutungs}"> Phụ tùng</a>
-                <a class="dropdown-item" th:href="@{/manager/loaiphutungs}">Loại phụ tùng</a>
-              </div>
-            </li>
-            
-            <li class="nav-item">
-              <a class="nav-link" th:href="@{/manager/phieubhs}"
-                >Phiếu bảo hành</a>
-            </li>
-            
           </ul>
           <div class="navbar-text">
-            <span sec:authentication="name">Username</span>
+            <span sec:authentication="name"></span>
             <span sec:authentication="principal.authorities">Roles</span>
-        </div>
+          </div>
           <div class="navbar-text ml-2">
-            <div sec:authorize="isAuthenticated()">
-              <form th:action="@{/logout}" method="post">
-                <input
-                        type="hidden"
-                        name="${_csrf.parameterName}"
-                        value="${_csrf.token}"
-                />
-                <span class="mt-1">
-                    <input
-                            type="submit"
-                            value="Logout"
-                            class="btn btn-outline-primary"
-                    />
-                  </span>
-              </form>
-            </div>
+<!--            <div sec:authorize="isAuthenticated()">-->
+<!--              -->
+<!--            </div>-->
+          </div>
+          <div>
+            <a class="btn btn-outline-primary" th:href="@{/logout}">
+                Logout
+            </a>
           </div>
         </div>
       </nav>

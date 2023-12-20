@@ -17,23 +17,32 @@ public class DataSourceSwitchInterceptor implements HandlerInterceptor {
     private final DataSource adminDataSource;
     private final DataSource userDataSource;
 
+    private final DataSource staffDataSource;
+
     @Autowired
     public DataSourceSwitchInterceptor(@Qualifier("adminAuditor") DataSource adminDataSource,
+                                        @Qualifier("staffAuditor") DataSource staffDataSource,
                                        @Qualifier("customerAuditor") DataSource userDataSource) {
         this.adminDataSource = adminDataSource;
         this.userDataSource = userDataSource;
+        this.staffDataSource = staffDataSource;
     }
 
     @Override
     public boolean preHandle(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull Object handler) throws Exception {
         System.out.println("DataSourceSwitchInterceptor" + request.getRequestURI());
         if (SecurityContextHolder.getContext().getAuthentication() != null) {
-            System.out.println(SecurityContextHolder.getContext().getAuthentication().getAuthorities());
             if (SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
                 System.out.println("admin");
                 DataSourceContextHolder.setDataSource(adminDataSource); // Set adminDataSource for admin requests
             } else {
-                DataSourceContextHolder.setDataSource(userDataSource); // Set userDataSource for other requests
+                if (SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains(new SimpleGrantedAuthority("ROLE_STAFF"))) {
+                    System.out.println("staff");
+                    DataSourceContextHolder.setDataSource(staffDataSource); // Set userDataSource for staff requests
+                } else {
+                    System.out.println("user");
+                    DataSourceContextHolder.setDataSource(userDataSource); // Set userDataSource for user requests
+                }
             }
         }
         return true;

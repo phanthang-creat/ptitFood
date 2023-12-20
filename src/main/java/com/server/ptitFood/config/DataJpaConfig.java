@@ -48,7 +48,7 @@ public class DataJpaConfig {
     @Bean
     public DataSource dataSource() {
         DataSourceRouter dataSourceRouter = new DataSourceRouter();
-        dataSourceRouter.initDatasource(adminAuditor(), staffAuditor());
+        dataSourceRouter.initDatasource(adminAuditor(), staffAuditor(), customerAuditor());
         return dataSourceRouter;
     }
 

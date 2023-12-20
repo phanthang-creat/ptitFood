@@ -13,16 +13,25 @@ import com.server.ptitFood.domain.dto.VerifyEmailDto;
 import com.server.ptitFood.domain.entities.Customer;
 import com.server.ptitFood.domain.repositories.UserRepository;
 import com.server.ptitFood.domain.repositories.UserGroupRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
 @Service
 public class UserService {
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     private final UserRepository userRepository;
 
@@ -44,9 +53,10 @@ public class UserService {
         this.otpRepository = otpRepository;
     }
 
-    public void register(RegisterDto registerDto) throws UserAlreadyExistException {
+    public boolean register(RegisterDto registerDto) throws UserAlreadyExistException {
 
         if (checkUserExistInDBUser(registerDto.getEmail(), registerDto.getUsername())) {
+            System.out.println("Email or username already exist");
             throw new UserAlreadyExistException("Email or username already exist");
         }
 
@@ -54,11 +64,14 @@ public class UserService {
             throw new UserAlreadyExistException("Password and confirm password not match");
         }
 
-
         Map<String, String> props = new HashMap<>();
+
         Map<String, Object> templateModel = new HashMap<>();
+
         String otpCode = CommonHelper.generateOTP(6);
+
         props.put("otp", otpCode);
+
         templateModel.put("props", props);
 
         Customer newUser = serializerToUser(registerDto, otpCode);
@@ -71,20 +84,20 @@ public class UserService {
                     newUser.getEmail()
             );
         } catch (Exception e) {
-            throw new UserAlreadyExistException("Username or email already exist");
+            System.out.println(e.getMessage());
+            throw new UserAlreadyExistException(e.getMessage());
         }
-
         try {
             mailService.sendMessageUsingThymeleafTemplate(registerDto.getEmail(), "PTIT", templateModel);
         } catch (Exception e) {
             throw new UserAlreadyExistException("Email not valid");
         }
 
-        try {
-            otpRepository.save(serializerToOTP(registerDto, otpCode));
-        } catch (Exception e) {
-            throw new UserAlreadyExistException("OTP not valid");
-        }
+        OTP otp = serializerToOTP(registerDto, otpCode);
+
+        otpRepository.save(otp);
+
+        return true;
     }
 
     private boolean checkUserExistInDBUser(String email, String username) {
@@ -98,7 +111,6 @@ public class UserService {
         user.setEmail(registerDto.getEmail());
         user.setPassword(registerDto.getPassword());
         user.setUserGroup(userGroupRepository.findUserGroupById(3));
-        user.setOtp(otp);
         return user;
     }
 
@@ -138,6 +150,8 @@ public class UserService {
                 .findFirst()
                 .orElse(null);
 
+        System.out.println(otp);
+
         if (otp == null) {
             throw new UserAlreadyExistException("OTP not valid");
         }
@@ -149,6 +163,20 @@ public class UserService {
         if (otp.getCreated().getTime() + 3 * 60 * 1000 < System.currentTimeMillis()) {
             throw new UserAlreadyExistException("OTP expired");
         }
+
+        otp.setStatus(Boolean.TRUE);
+
+        otpRepository.save(otp);
+
+        Customer user = userRepository.findUserByUserName(otp.getUserName()).isPresent() ?
+                userRepository.findUserByUserName(otp.getUserName()).get() :
+                null;
+
+        if (user == null) {
+            throw new UserAlreadyExistException("User not exist");
+        }
+
+        updateStatus(user.getUsername(), 1);
     }
 
     public Page<Customer> selectCustomerDecryption(Pageable pageable) {
@@ -164,5 +192,28 @@ public class UserService {
 
     public Page<Customer> findByUsernameContaining(String username, Pageable pageable) {
         return userRepository.findByUsernameContaining(username, pageable);
+    }
+
+    public void updateStatus(String username, int status) {
+        userRepository.updateStatus(status, username);
+    }
+
+    public Customer getUserById(Integer id) {
+        return userRepository.findByIdAndStatus(id, 1);
+    }
+
+    public Customer getUserByUserName(String username) {
+        return userRepository.findUserByUserNameAndStatus(username, 1).orElse(null);
+    }
+
+    public Customer getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return getUserByUserName(authentication.getName());
+    }
+
+    @Transactional
+    public Customer getCustomerDecryptionByUsername() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return userRepository.selectCustomerDecryptionByUsername(authentication.getName());
     }
 }

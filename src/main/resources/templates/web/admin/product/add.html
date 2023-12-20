@@ -42,9 +42,9 @@
                         <label for="avatar">
                         </label>
                         <input type="hidden" name="avatar" id="avatar" placeholder="" value="" />
-                        <label for="image">
+                        <label for="img">
                         </label>
-                        <input type="hidden" name="image" id="image" placeholder="" value="" />
+                        <input type="hidden" name="img" id="img" placeholder="" value="" />
                         <!--                       -->
 
                         <div class="container col-md-6">
@@ -104,7 +104,7 @@
                         <div class="col">
                             <div class="form-outline">
                                 <label class="form-label" for="priceSale">Giá giảm</label>
-                                <input type="number" name="priceSale" id="priceSale" placeholder="Giá giảm" class="form-control" />
+                            <input type="number" name="priceSale" id="priceSale" placeholder="Giá giảm" class="form-control" />
                             </div>
                         </div>
                     </div>
@@ -189,7 +189,7 @@
         function onUpload() {
             return new Promise((resolve, reject) => {
                 fileUpload('formFile', 'avatar').then(() => {
-                    fileUpload('formFile-2', 'image').then(() => {
+                    fileUpload('formFile-2', 'img').then(() => {
                         resolve();
                     });
                 });

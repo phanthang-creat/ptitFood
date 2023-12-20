@@ -26,8 +26,8 @@ public class Category {
     @JoinColumn(name = "parent_id", referencedColumnName = "id")
     private Category parentId;
 
-    @Column(nullable = true, name = "order", columnDefinition = "INT")
-    private Integer order;
+    @Column(nullable = true, name = "sort_desc", columnDefinition = "INT")
+    private Integer sortDesc;
 
     @Column(nullable = false, name = "created", columnDefinition = "DATETIME")
     private Date created;

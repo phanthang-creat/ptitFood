@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
 
 @Service("captchaService")
 public class CaptchaService extends AbstractCaptchaService {
@@ -15,6 +16,8 @@ public class CaptchaService extends AbstractCaptchaService {
     @Override
     public void processResponse(final String response) {
         securityCheck(response);
+
+        RestTemplate restTemplate = new RestTemplate();
 
         final URI verifyUri = URI.create(String.format(RECAPTCHA_URL_TEMPLATE, getReCaptchaSecret(), response, getClientIP()));
         try {

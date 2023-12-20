@@ -79,8 +79,8 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     public Map<String, String> onException(UsernameOrPasswordNotValid e) {
-        System.out.println("Handle exception UsernameOrPasswordNotValid");
         Map<String, String> errors = new HashMap<>();
+        System.out.println(e.getMessage());
         errors.put("message", "Username or password not valid");
         errors.put("status", "400");
         errors.put("error", "Bad Request");

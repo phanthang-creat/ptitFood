@@ -16,4 +16,12 @@ public class DataSourceContextHolder {
     public static void clearDataSource() {
         CONTEXT.remove();
     }
+
+    public static ClientDatabase getClientDatabase() {
+        return CONTEXT.get() == null ? null : ClientDatabase.valueOf(CONTEXT.get().toString());
+    }
+
+    public static void clear() {
+        CONTEXT.remove();
+    }
 }

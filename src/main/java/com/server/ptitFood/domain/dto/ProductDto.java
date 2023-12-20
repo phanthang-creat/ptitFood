@@ -11,6 +11,8 @@ public class ProductDto extends InitialDto implements java.io.Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
+    private Integer id;
+
     private String name;
 
     private String alias;
@@ -19,13 +21,13 @@ public class ProductDto extends InitialDto implements java.io.Serializable {
 
     private String avatar;
 
-    private String image;
+    private String img;
 
     private Integer sortDesc;
 
     private Integer price = 0;
 
-    private Integer sale = 0;
+    private Integer priceSale = 0;
 
     private Integer number = 0;
 

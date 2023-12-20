@@ -1,14 +1,15 @@
 package com.server.ptitFood.domain.services;
 
 import com.server.ptitFood.domain.dto.CategoryDto;
+import com.server.ptitFood.domain.entities.Admin;
 import com.server.ptitFood.domain.entities.Category;
 import com.server.ptitFood.domain.repositories.CategoryRepository;
-import com.server.ptitFood.domain.services.admin.AdminControlService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
 import java.util.List;
 
 @Service
@@ -26,41 +27,51 @@ public class CategoryService {
     }
 
     public Page<Category> selectCategoriesDecryption(Pageable pageable) {
-        List<Category> categories = categoryRepository.selectAllCategory();
-        System.out.println(categories);
+        List<Category> categories = categoryRepository.findAll();
         return new PageImpl<>(categories, pageable, categories.size());
     }
 
     public List<Category> selectCategoriesDecryption() {
-        return categoryRepository.selectAllCategory();
+        return categoryRepository.findAll();
     }
 
     public void insertCategory(CategoryDto dto) {
-        Integer id = adminService.getAdminByUserName().getId();
+        Admin id = adminService.getAdminByUserName();
 
-        categoryRepository.insertCategory(
-                dto.getName(),
-                dto.getLink(),
-                dto.getParentId(),
-                dto.getOrder(),
-                id,
-                id,
-                dto.getStatus()
+        Category category = new Category();
+        category.setName(dto.getName());
+        category.setLink(dto.getLink());
+        category.setParentId(
+                dto.getParentId() != null &&
+                categoryRepository.findById(dto.getParentId()).isPresent() ?
+                        categoryRepository.findById(dto.getParentId()).get() : null
         );
+        category.setSortDesc(dto.getSortDesc());
+        category.setCreatedBy(id);
+        category.setUpdatedBy(id);
+        category.setStatus(dto.getStatus());
+        category.setUpdated(new Date(System.currentTimeMillis()));
+        category.setCreated(new Date(System.currentTimeMillis()));
+        categoryRepository.save(category);
     }
 
     public void updateCategory(CategoryDto dto) {
-        Integer id = adminService.getAdminByUserName().getId();
+        Admin id = adminService.getAdminByUserName();
 
-        categoryRepository.updateCategory(
-                dto.getId(),
-                dto.getName(),
-                dto.getLink(),
-                dto.getParentId(),
-                dto.getOrder(),
-                id,
-                dto.getStatus()
+        Category category = categoryRepository.findById(dto.getId()).isPresent() ?
+                categoryRepository.findById(dto.getId()).get() : null;
+        assert category != null;
+        category.setName(dto.getName());
+        category.setLink(dto.getLink());
+        category.setParentId(
+                dto.getParentId() != null &&
+                        categoryRepository.findById(dto.getParentId()).isPresent() ?
+                        categoryRepository.findById(dto.getParentId()).get() : null
         );
+        category.setSortDesc(dto.getSortDesc());
+        category.setUpdatedBy(id);
+        category.setStatus(dto.getStatus());
+        categoryRepository.save(category);
     }
 
     public void deleteCategory(Integer id) {
@@ -74,7 +85,12 @@ public class CategoryService {
     }
 
     public Category selectCategoryDecryptionById(Integer id) {
-        return categoryRepository.selectCategoryDecryptionById(id);
+        return categoryRepository.findById(id).isPresent() ?
+                categoryRepository.findById(id).get() : null;
+    }
+
+    public Category selectCategoryDecryptionByIdQuery(Integer id) {
+        return categoryRepository.selectCategoryDecryptionByIdQuery(id);
     }
 
 }

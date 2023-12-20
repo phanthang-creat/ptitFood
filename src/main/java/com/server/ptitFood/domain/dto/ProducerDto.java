@@ -19,11 +19,9 @@ public class ProducerDto extends InitialDto implements java.io.Serializable {
 
     private String code;
 
-    private String keywork;
+    private String keyword;
 
     private Integer status;
-
-    private Integer trash;
 
     private Admin createdBy;
 
@@ -35,25 +33,4 @@ public class ProducerDto extends InitialDto implements java.io.Serializable {
 
     public ProducerDto() {
     }
-
-    public ProducerDto(String _name, String _code, String _keywork, Integer _status, Integer _trash) {
-        super();
-        this.name = _name;
-        this.code = _code;
-        this.keywork = _keywork;
-        this.status = _status;
-        this.trash = _trash;
-    }
-
-    public ProducerDto(Integer _id, String _name, String _code, String _keywork, Integer _status, Integer _trash) {
-        super();
-        this.id = _id;
-        this.name = _name;
-        this.code = _code;
-        this.keywork = _keywork;
-        this.status = _status;
-        this.trash = _trash;
-    }
-
-
 }

@@ -4,8 +4,8 @@ import com.server.ptitFood.domain.dto.ProducerDto;
 import com.server.ptitFood.domain.dto.ProductDto;
 import com.server.ptitFood.domain.entities.Product;
 import com.server.ptitFood.domain.services.CategoryService;
-import com.server.ptitFood.domain.services.admin.AdminProducerService;
-import com.server.ptitFood.domain.services.admin.AdminProductService;
+import com.server.ptitFood.domain.services.ProducerService;
+import com.server.ptitFood.domain.services.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,17 +27,17 @@ import java.util.Optional;
 @RequestMapping(path = "admin/products")
 public class ProductsCtl {
 
-    final private AdminProductService adminProductService;
+    final private ProductService adminProductService;
 
-    final private AdminProducerService adminProducerService;
+    final private ProducerService producerService;
 
     final private CategoryService categoryService;
 
     public ProductsCtl(
-            AdminProductService adminProductService,
-            AdminProducerService adminProducerService, CategoryService categoryService) {
+            ProductService adminProductService,
+            ProducerService producerService, CategoryService categoryService) {
         this.adminProductService = adminProductService;
-        this.adminProducerService = adminProducerService;
+        this.producerService = producerService;
         this.categoryService = categoryService;
     }
 
@@ -55,7 +55,7 @@ public class ProductsCtl {
     @ModelAttribute("producers")
     @Transactional
     public List<ProducerDto> getProducers() {
-        return adminProducerService.findAll().stream().map(item -> {
+        return producerService.findAll().stream().map(item -> {
             ProducerDto dto = new ProducerDto();
             dto.setId(item.getId());
             dto.setName(item.getName());
@@ -84,8 +84,6 @@ public class ProductsCtl {
         } else {
             resultPage = adminProductService.findAll(pageable);
         }
-
-        System.out.println("resultPage" + resultPage);
 
         int totalPages = resultPage.getTotalPages();
         if (totalPages > 0) {
@@ -130,32 +128,36 @@ public class ProductsCtl {
         return new ModelAndView("redirect:/admin/products", model);
     }
 
+    @GetMapping("edit")
+    @Transactional
+    public String edit(
+            @RequestParam("id") Integer id,
+            Model model) {
+        Product product = adminProductService.findProductById(id);
+        ProductDto dto = new ProductDto();
+        dto.setId(product.getId());
+        dto.setName(product.getName());
+        dto.setPrice(product.getPrice());
+        dto.setPriceSale(product.getPriceSale());
+        dto.setNumber(product.getNumber());
+        dto.setNumberBuy(product.getNumberBuy());
+        dto.setImg(product.getImg());
+        dto.setAvatar(product.getAvatar());
+        dto.setAlias(product.getAlias());
+        dto.setDetail(product.getDetail());
+        dto.setCatId(product.getCategory().getId());
+        dto.setProducerId(product.getProducer().getId());
+        dto.setStatus(product.getStatus());
+        model.addAttribute("product", dto);
+        return "web/admin/product/edit";
+    }
+
     @PostMapping("edit")
     @Transactional
     public ModelAndView saveOrUpdate(
             ModelMap model,
-            @Valid @ModelAttribute("customer") ProductDto dto,
+            @Valid @ModelAttribute("product") ProductDto dto,
             BindingResult result) {
-
-        System.out.println(dto);
-        System.out.println(result.hasErrors());
-
-//        Optional<Product> khsv = adminProductService;
-//        if(khsv.isPresent() && !dto.getEdit()){
-//            model.addAttribute("message", "CMND đã tồn tại!");
-//            return new ModelAndView("/customers/addOrEdit");
-//
-//        }
-//        if (result.hasErrors()) {
-//            return new ModelAndView("/customers/addOrEdit");
-//        }
-//
-//        KhachHang entity = new KhachHang();
-//        BeanUtils.copyProperties(dto, entity);
-//        System.out.println(entity);
-//        customerService.save(entity);
-//        model.addAttribute("message", "customers is saved!");
-//        return new ModelAndView("redirect:/manager/customers", model);
         return null;
     }
 }

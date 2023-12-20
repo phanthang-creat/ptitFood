@@ -2,8 +2,11 @@ package com.server.ptitFood.config;
 
 import com.server.ptitFood.common.helper.encoding.EncodingHelper;
 import com.server.ptitFood.config.dsrouting.DataSourceSwitchInterceptor;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -11,6 +14,8 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
+@EnableAsync
+
 public class AppConfig implements WebMvcConfigurer {
 
     private final DataSourceSwitchInterceptor dataSourceSwitchInterceptor;
@@ -47,6 +52,17 @@ public class AppConfig implements WebMvcConfigurer {
         registry
                 .addResourceHandler("/static/**")
                 .addResourceLocations("/resources/static/", "classpath:/static/", "classpath:/static/images/");
+    }
+
+    @Bean(name = "messageSource")
+    public MessageSource getMessageResource()  {
+        ReloadableResourceBundleMessageSource messageResource= new ReloadableResourceBundleMessageSource();
+
+        // Đọc vào file i18n/messages_xxx.properties
+        // Ví dụ: i18n/messages_en.properties
+        messageResource.setBasename("classpath:i18n/messages");
+        messageResource.setDefaultEncoding("UTF-8");
+        return messageResource;
     }
 
 }

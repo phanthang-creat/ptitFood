@@ -1,5 +1,5 @@
 package com.server.ptitFood.config.dsrouting;
 
 public enum ClientDatabase {
-    ADMIN, CLIENT
+    ADMIN, STAFF, CLIENT
 }

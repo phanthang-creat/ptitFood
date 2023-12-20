@@ -48,7 +48,7 @@
                 </div>
               </div>
             </div>
-            <div class="row" th:if="${(currentPage == null) || !currentPage.hasContent()}">
+            <div class="row" th:if="${currentPage == null || !currentPage.hasContent()}">
               <div class="col">
                 <div class="alert alert-danger" role="alert">
                   <strong>Không tìm thấy sản phẩm</strong>
@@ -58,7 +58,7 @@
             <div class="table-responsive">
               <table
                 class="table table-striped table-inverse"
-                th:if="${!(currentPage == null) && currentPage.hasContent()}"
+                th:if="${currentPage != null && currentPage.hasContent()}"
               >
                 <thead class="thead-inverse">
                   <tr>
@@ -71,7 +71,9 @@
                   <tr th:each="item , iStat : ${products}">
                     <td th:text="${item.getId()}"></td>
                     <td th:text="${item.getName()}"></td>
-                    <td th:text="${item}"></td>
+                    <td th:text="${item.getCategory().getName()}">
+                      Không có
+                    </td>
                     <td>
                       <a
                         th:href="@{'/admin/customers/edit/' + ${item.getId()}}"
@@ -94,7 +96,7 @@
             <script>
               const showConfirmModelDialog = (id, name) => {
                 $("#productName").text(name);
-                $("#yesOption").attr("href", "/admin/customers/delete/" + id);
+                $("#yesOption").attr("href", "/admin/products/delete/" + id);
                 $("#confirmationId").modal("show");
               };
             </script>
@@ -167,7 +169,7 @@
                     th:class="${1 == currentPage.number + 1} ? 'page-item active' : 'page-item' "
                   >
                     <a
-                      th:href="@{/admin/customers(size=${currentPage.size},page=${0})}"
+                      th:href="@{/admin/products(size=${currentPage.size},page=${0})}"
                       th:class="page-link"
                     >
                       First
@@ -180,7 +182,7 @@
                     th:class="${pageNumber == currentPage.number +1 } ? 'page-item active ' : 'page-item'"
                   >
                     <a
-                      th:href="@{/admin/customers(ten=${name}, size=${currentPage.size},page=${pageNumber - 1})}"
+                      th:href="@{/admin/products(ten=${name}, size=${currentPage.size},page=${pageNumber - 1})}"
                       th:class="page-link"
                       th:text="${pageNumber}"
                       >1</a
@@ -190,7 +192,7 @@
                     th:class="${currentPage.totalPages - 1 == currentPage.number} ? 'page-item active' : 'page-item' "
                   >
                     <a
-                      th:href="@{/admin/customers(name=${name}, size=${currentPage.size},page=${currentPage.totalPages -1})}"
+                      th:href="@{/admin/products(name=${name}, size=${currentPage.size},page=${currentPage.totalPages -1})}"
                       th:class="page-link"
                     >
                       Last

@@ -2,7 +2,7 @@ package com.server.ptitFood.controllers.admin;
 
 import com.server.ptitFood.domain.dto.ProducerDto;
 import com.server.ptitFood.domain.entities.Producer;
-import com.server.ptitFood.domain.services.admin.AdminProducerService;
+import com.server.ptitFood.domain.services.ProducerService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,10 +22,10 @@ import java.util.Optional;
 @Transactional
 public class ProducersCtl {
 
-    final private AdminProducerService adminProducerService;
+    final private ProducerService producerService;
 
-    public ProducersCtl(AdminProducerService adminProducerService) {
-        this.adminProducerService = adminProducerService;
+    public ProducersCtl(ProducerService producerService) {
+        this.producerService = producerService;
     }
 
     @GetMapping(name = "", path = "")
@@ -49,7 +49,7 @@ public class ProducersCtl {
 //            resultPage = adminProductService.findAll(pageable);
 //        }
 
-        resultPage = adminProducerService.findAll(pageable);
+        resultPage = producerService.findAll(pageable);
 
         System.out.println("resultPage" + resultPage);
 
@@ -84,7 +84,7 @@ public class ProducersCtl {
     @Transactional()
     public String addProducersPage(@Valid ProducerDto producerDto, BindingResult result, Model model) {
         System.out.println("producerDto: " + producerDto.toString());
-        adminProducerService.insertProducer(producerDto);
+        producerService.insertProducer(producerDto);
         if (result.hasErrors()) {
             return "web/admin/producer/add";
         }
@@ -97,13 +97,12 @@ public class ProducersCtl {
             Model model,
             @PathVariable String id
     ) {
-        Producer producer = adminProducerService.findById(Integer.valueOf(id));
+        Producer producer = producerService.findById(Integer.valueOf(id));
         ProducerDto dto = new ProducerDto();
         dto.setId(producer.getId());
         dto.setName(producer.getName());
         dto.setCode(producer.getCode());
-        dto.setKeywork(producer.getKeyword());
-        dto.setTrash(producer.getTrash());
+        dto.setKeyword(producer.getKeyword());
         dto.setStatus(producer.getStatus());
         dto.setCreated(producer.getCreated());
         dto.setUpdated(producer.getUpdated());
@@ -123,7 +122,7 @@ public class ProducersCtl {
             @PathVariable String id
     ) {
         System.out.println("producerDto: " + producerDto.toString());
-        adminProducerService.updateProducerById(producerDto);
+        producerService.updateProducerById(producerDto);
         if (result.hasErrors()) {
             return "web/admin/producer/edit";
         }
@@ -135,7 +134,7 @@ public class ProducersCtl {
     public String deleteProducersPage(
             @PathVariable String id
     ) {
-        adminProducerService.deleteProducerById(Integer.valueOf(id));
+        producerService.deleteProducerById(Integer.valueOf(id));
         return "redirect:/admin/producers";
     }
 }

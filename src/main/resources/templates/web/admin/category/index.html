@@ -46,7 +46,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row" th:if="${(currentPage == null) || !currentPage.hasContent()}">
+                <div class="row" th:if="${currentPage == null || !currentPage.hasContent()}">
                     <div class="col">
                         <div class="alert alert-danger" role="alert">
                             <strong>Không tìm danh mục</strong>
@@ -75,7 +75,7 @@
                             <td th:text="${item.getName()}"></td>
                             <td th:text="${item.getLink()}"></td>
                             <td th:text="${item.getParentId() == null ? 'Không có' : item.getParentId().getName()}"></td>
-                            <td th:text="${item.getOrder() == null ? 'Mặc định' : item.getOrder()}"></td>
+                            <td th:text="${item.getSortDesc() == null ? 'Mặc định' : item.getSortDesc()}"></td>
                             <td th:text="${item.getStatus() == 1 ? 'Hoạt động' : 'Không hoạt động'}"></td>
                             <td>
                                 <a

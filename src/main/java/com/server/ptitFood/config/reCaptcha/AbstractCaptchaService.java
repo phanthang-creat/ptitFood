@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
-import org.springframework.web.client.RestOperations;
+import org.springframework.web.client.RestTemplate;
 
 public abstract class AbstractCaptchaService implements ICaptchaService{
 
@@ -22,7 +22,7 @@ public abstract class AbstractCaptchaService implements ICaptchaService{
     @Autowired
     protected ReCaptchaAttemptService reCaptchaAttemptService;
 
-    protected RestOperations restTemplate;
+    protected RestTemplate restTemplate;
 
     protected static final Pattern RESPONSE_PATTERN = Pattern.compile("[A-Za-z0-9_-]+");
 
