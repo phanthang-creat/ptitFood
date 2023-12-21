@@ -40,8 +40,10 @@ public class SecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .exceptionHandling((e) -> {
-                    e.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
-                            .accessDeniedPage("/auth?rolefail");
+                    // redirect to login page when user is not authenticate
+                    e.authenticationEntryPoint(
+                            ((request, response, authException) -> response.sendRedirect("/auth/login"))
+                    );
                 })
                 .sessionManagement((sessionManagement) ->
                         sessionManagement
@@ -51,11 +53,10 @@ public class SecurityConfig {
                         authorizeHttpRequests
                                 .requestMatchers("/auth/**").permitAll()
                                 .requestMatchers("/static/**").permitAll()
+                                .requestMatchers("**.js", "**.css", "**.png", "**.jpg", "**.jpeg", "**.gif").permitAll()
                                 .requestMatchers("/error").permitAll()
-                                .requestMatchers("/WEB/**", "/CNPM/**").permitAll()
                                 .requestMatchers("/customer/auth/**").permitAll()
                                 .requestMatchers("/admin/**").hasRole("ADMIN")
-                                .requestMatchers(("/app/**")).hasRole("CUSTOMER")
                                 .requestMatchers(("/favicon.ico")).permitAll()
                                 .anyRequest().authenticated()
                 )
@@ -65,7 +66,6 @@ public class SecurityConfig {
                         new JwtTokenAuthenticationFilter(jwtTokenProvider),
                         UsernamePasswordAuthenticationFilter.class
                 );
-//        http.httpBasic();
         return http.build();
     }
 

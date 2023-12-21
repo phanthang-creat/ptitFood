@@ -6,6 +6,7 @@ import io.jsonwebtoken.JwtException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import java.security.AccessControlException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -106,6 +108,18 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ResponseBody
     public Map<String, String> onException(BadCredentialsException e) {
+        System.out.println("Handle exception HttpClientErrorException.Unauthorized");
+        Map<String, String> errors = new HashMap<>();
+        errors.put("message", "Unauthorized");
+        errors.put("status", "401");
+        errors.put("error", "Unauthorized");
+        return errors;
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ResponseBody
+    public Map<String, String> onException(AccessDeniedException e) {
         System.out.println("Handle exception HttpClientErrorException.Unauthorized");
         Map<String, String> errors = new HashMap<>();
         errors.put("message", "Unauthorized");

@@ -44,22 +44,26 @@
                       <li class="nav-item">
                           <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
                       </li>
-                      <li>
-                          <i class="bi bi-cart"></i>
-                      </li>
+
                   </ul>
                   <div class="my-2 my-lg-0">
-                      <button class="btn my-2 my-sm-0 bg-transparent" type="button">
+                      <a class="btn my-2 my-sm-0 bg-transparent"  th:href="@{/cart/detail}">
                           <img src="/static/images/cart.svg" alt="cart">
-                          <span th:text="${session.get('cart')}">
-
-                          </span>
-                      </button>
+                      </a>
                   </div>
                   <div class="my-2 my-lg-0">
                       <a class="btn my-2 my-sm-0 bg-transparent" href="/profile">
                           <img src="/static/images/user.png" alt="profile" style="height: 16px; width: 16px;">
                       </a>
+                  </div>
+                  <div class="my-2 my-lg-0">
+<!--                    logout -->
+                      <form th:action="@{/auth/logout}" method="post">
+                          <button type="submit" class="btn my-2 my-sm-0 bg-transparent">
+                              <img src="/static/images/logout.png" alt="logout" style="height: 16px; width: 16px;">
+                            </button>
+                    </form>
+
                   </div>
               </div>
           </nav>

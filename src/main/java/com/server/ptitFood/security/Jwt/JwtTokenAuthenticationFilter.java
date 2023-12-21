@@ -8,6 +8,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -25,13 +26,11 @@ public class JwtTokenAuthenticationFilter extends GenericFilterBean {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain)
-            throws IOException, ServletException {
+            throws IOException, ServletException, AccessDeniedException {
         String token = resolveToken((HttpServletRequest) request);
 
-        System.out.println("doFilter on request: " + ((HttpServletRequest) request).getServletPath());
-
+        String path = ((HttpServletRequest) request).getServletPath();
         if (token != null) {
-            System.out.println("Validating token: " + token);
             if (jwtTokenProvider.validateToken(token)) {
                 Authentication auth = jwtTokenProvider.getAuthentication(token);
                 if (auth != null && !(auth instanceof AnonymousAuthenticationToken)) {

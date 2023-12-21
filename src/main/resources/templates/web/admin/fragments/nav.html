@@ -92,10 +92,13 @@
 <!--              -->
 <!--            </div>-->
           </div>
-          <div>
-            <a class="btn btn-outline-primary" th:href="@{/logout}">
-                Logout
-            </a>
+          <div class="my-2 my-lg-0">
+            <!--                    logout -->
+            <form th:action="@{/auth/logout}" method="post">
+              <button type="submit" class="btn my-2 my-sm-0 bg-transparent">
+                <img src="/static/images/logout.png" alt="logout" style="height: 16px; width: 16px;">
+              </button>
+            </form>
           </div>
         </div>
       </nav>
