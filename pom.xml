@@ -14,7 +14,7 @@
 	<name>ptitFood</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
-		<java.version>20</java.version>
+		<java.version>11</java.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -209,7 +209,7 @@
 			<version>8.1.0</version>
 		</dependency>
 	</dependencies>
-
+	<packaging>jar</packaging>
 	<build>
 		<plugins>
 			<plugin>

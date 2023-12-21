@@ -2,15 +2,9 @@ package com.server.ptitFood.domain.dto;
 
 import lombok.Getter;
 import lombok.Setter;
-
-import java.io.Serial;
-
 @Getter
 @Setter
 public class ProductDto extends InitialDto implements java.io.Serializable {
-    @Serial
-    private static final long serialVersionUID = 1L;
-
     private Integer id;
 
     private String name;

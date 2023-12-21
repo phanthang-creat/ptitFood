@@ -3,15 +3,10 @@ package com.server.ptitFood.domain.dto;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.Serial;
-
 @Getter
 @Setter
 public class CustomerDto implements java.io.Serializable {
-    @Serial
-    private static final long serialVersionUID = 1L;
-
-    private String username;
+  private String username;
     private String password;
     private String name;
     private String phone;
