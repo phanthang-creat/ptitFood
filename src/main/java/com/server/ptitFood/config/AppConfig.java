@@ -38,6 +38,7 @@ public class AppConfig implements WebMvcConfigurer {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new PasswordEncoder() {
@@ -69,8 +70,8 @@ public class AppConfig implements WebMvcConfigurer {
     }
 
     @Bean(name = "messageSource")
-    public MessageSource getMessageResource()  {
-        ReloadableResourceBundleMessageSource messageResource= new ReloadableResourceBundleMessageSource();
+    public MessageSource getMessageResource() {
+        ReloadableResourceBundleMessageSource messageResource = new ReloadableResourceBundleMessageSource();
 
         // Đọc vào file i18n/messages_xxx.properties
         // Ví dụ: i18n/messages_en.properties

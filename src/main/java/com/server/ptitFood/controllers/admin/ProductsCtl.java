@@ -104,8 +104,6 @@ public class ProductsCtl {
         model.addAttribute("products", resultPage.getContent());
         model.addAttribute("productPage", resultPage);
 
-        System.out.println(resultPage.getContent());
-
         return "web/admin/product/search";
     }
 
@@ -128,12 +126,14 @@ public class ProductsCtl {
         return new ModelAndView("redirect:/admin/products", model);
     }
 
-    @GetMapping("edit")
+    @GetMapping("edit/{id}")
     @Transactional
     public String edit(
-            @RequestParam("id") Integer id,
-            Model model) {
-        Product product = adminProductService.findProductById(id);
+            Model model,
+            @PathVariable String id
+//            @ModelAttribute("product") ProductDto dto
+    ) {
+        Product product = adminProductService.findProductById(Integer.valueOf(id));
         ProductDto dto = new ProductDto();
         dto.setId(product.getId());
         dto.setName(product.getName());
@@ -145,19 +145,33 @@ public class ProductsCtl {
         dto.setAvatar(product.getAvatar());
         dto.setAlias(product.getAlias());
         dto.setDetail(product.getDetail());
-        dto.setCatId(product.getCategory().getId());
-        dto.setProducerId(product.getProducer().getId());
+        dto.setCatId(product.getCategory() != null ? product.getCategory().getId() : null);
+        dto.setProducerId(product.getProducer() != null ? product.getProducer().getId() : null);
         dto.setStatus(product.getStatus());
         model.addAttribute("product", dto);
         return "web/admin/product/edit";
     }
 
-    @PostMapping("edit")
+    @PostMapping("edit/{id}")
     @Transactional
     public ModelAndView saveOrUpdate(
             ModelMap model,
             @Valid @ModelAttribute("product") ProductDto dto,
+            @PathVariable Integer id,
             BindingResult result) {
-        return null;
+        adminProductService.updateProduct(dto);
+        System.out.println(dto);
+        model.addAttribute("message", "Sản phẩm đã được lưu!");
+        return new ModelAndView("redirect:/admin/products", model);
+    }
+
+    @GetMapping("delete/{id}")
+    @Transactional
+    public ModelAndView delete(
+            ModelMap model,
+            @PathVariable Integer id) {
+        adminProductService.deleteProduct(id);
+        model.addAttribute("message", "Sản phẩm đã được xóa!");
+        return new ModelAndView("redirect:/admin/products", model);
     }
 }

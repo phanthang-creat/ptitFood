@@ -42,16 +42,7 @@ public class ProducersCtl {
 
         Page<Producer> resultPage = null;
 
-//        if (name != null) {
-//            resultPage = adminProductService.findAll(pageable);
-//            model.addAttribute("name", name);
-//        } else {
-//            resultPage = adminProductService.findAll(pageable);
-//        }
-
         resultPage = producerService.findAll(pageable);
-
-        System.out.println("resultPage" + resultPage);
 
         int totalPages = resultPage.getTotalPages();
         if (totalPages > 0) {
@@ -69,8 +60,6 @@ public class ProducersCtl {
             model.addAttribute("items", resultPage.getContent());
         }
 
-        System.out.println(resultPage.getContent());
-
         return "web/admin/producer/index";
     }
 
@@ -83,12 +72,16 @@ public class ProducersCtl {
     @PostMapping("/add")
     @Transactional()
     public String addProducersPage(@Valid ProducerDto producerDto, BindingResult result, Model model) {
-        System.out.println("producerDto: " + producerDto.toString());
-        producerService.insertProducer(producerDto);
+
+        if(producerService.insertProducer(producerDto)) {
+            return "redirect:/admin/producers";
+        } else {
+            model.addAttribute("message", "Thêm thất bại");
+        }
         if (result.hasErrors()) {
             return "web/admin/producer/add";
         }
-        return "redirect:/admin/producers/add";
+        return "redirect:/admin/producers/";
     }
 
     @GetMapping("/edit/{id}")
@@ -121,12 +114,11 @@ public class ProducersCtl {
             Model model,
             @PathVariable String id
     ) {
-        System.out.println("producerDto: " + producerDto.toString());
         producerService.updateProducerById(producerDto);
         if (result.hasErrors()) {
             return "web/admin/producer/edit";
         }
-        return "redirect:/admin/producers/edit/" + id;
+        return "redirect:/admin/producers";
     }
 
     @PostMapping("/delete/{id}")

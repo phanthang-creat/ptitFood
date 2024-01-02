@@ -21,16 +21,16 @@ public interface CategoryRepository extends JpaRepository<Category, Integer> {
             @Param("status_in") Integer status
     );
 
-    @Procedure(procedureName = "update_category_by_id")
-    void updateCategory(
-            @Param("id_in") Integer id,
-            @Param("name_in") String name,
-            @Param("link_in") String link,
-            @Param("parent_id_in") Integer parentId,
-            @Param("order_in") Integer order,
-            @Param("updated_by_in") Integer updatedBy,
-            @Param("status_in") Integer status
-    );
+//    @Procedure(procedureName = "update_category_by_id")
+//    void updateCategory(
+//            @Param("id_in") Integer id,
+//            @Param("name_in") String name,
+//            @Param("link_in") String link,
+//            @Param("parent_id_in") Integer parentId,
+//            @Param("order_in") Integer order,
+//            @Param("updated_by_in") Integer updatedBy,
+//            @Param("status_in") Integer status
+//    );
 
     @Procedure(procedureName = "delete_category")
     void deleteCategory(

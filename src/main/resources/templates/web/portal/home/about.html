@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        lang="en"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{web/portal/Layout}">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta>
+    <title>PtitFood</title>
+    <!-- Import Boostrap css, js, font awesome here -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <link
+            href="https://use.fontawesome.com/releases/v5.0.4/css/all.css"
+            rel="stylesheet"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <link th:href="@{/static/style.css}">
+</head>
+
+<body>
+<div layout:fragment="contentlayout" >
+    <section>
+    <div class="container mx-auto" style="margin-top: 4rem; margin-bottom: 4rem;">
+        <div class="row">
+            <div class="col">
+                <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3918.520141589769!2d106.78408977476617!3d10.847986989305175!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752772b245dff1%3A0xb838977f3d419d!2zSOG7jWMgdmnhu4duIEPDtG5nIG5naOG7hyBCQ1ZUIGPGoSBz4bufIHThuqFpIFRQLkhDTQ!5e0!3m2!1svi!2s!4v1686381005325!5m2!1svi!2s"
+                        width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+            <div class="col d-flex" style="padding: 2rem">
+                <div class="mb-auto mt-auto max-w-lg">
+                    <h1 class="text-3xl uppercase">
+                        <span class="" style="color: rgb(255,8,51)">PTIT</span>
+                        <span class="" style="color: #edcc6f">FOOD</span>
+                    </h1>
+                    <!-- about me -->
+                    <p class="text-muted my-2">
+                        PTITFOOD là một website bán hàng trực tuyến với các sản phẩm thực phẩm sạch, đảm bảo chất lượng, an toàn vệ sinh thực phẩm.
+                    </p>
+                    <p class="font-semibold mb-5">
+                        <span class="text-secondary">Địa chỉ:</span>
+                        <span class="text-muted">97 Đ. Man Thiện, Hiệp Phú, Thành Phố Thủ Đức, Thành phố Hồ Chí Minh</span>
+                    </p>
+                    <p class="font-semibold mb-5">
+                        <span class="text-secondary">Số điện thoại:</span>
+                        <span class="text-muted">+84 123 456 789</span>
+                    </p>
+                    <p class="font-semibold mb-5">
+                        <span class="text-secondary">Email:</span>
+                        <span class="text-muted">
+                        <a href="mailto:ptitfood@gmail.com">
+                            ptitfood@gmail.com
+                        </a>
+                    </span>
+                    </p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    </section>
+</div>
+
+
+</body>
+</html>

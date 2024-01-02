@@ -3,19 +3,16 @@ package com.server.ptitFood.domain.services;
 import com.server.ptitFood.MailService.EmailServiceImpl;
 import com.server.ptitFood.common.helper.CommonHelper;
 import com.server.ptitFood.common.helper.encoding.EncodingHelper;
+import com.server.ptitFood.domain.dto.*;
 import com.server.ptitFood.domain.entities.OTP;
 import com.server.ptitFood.domain.repositories.OtpRepository;
 import com.server.ptitFood.domain.exceptions.UserAlreadyExistException;
 import com.server.ptitFood.domain.exceptions.UsernameOrPasswordNotValid;
-import com.server.ptitFood.domain.dto.LoginDto;
-import com.server.ptitFood.domain.dto.RegisterDto;
-import com.server.ptitFood.domain.dto.VerifyEmailDto;
 import com.server.ptitFood.domain.entities.Customer;
 import com.server.ptitFood.domain.repositories.UserRepository;
 import com.server.ptitFood.domain.repositories.UserGroupRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -55,9 +52,16 @@ public class UserService {
 
     public boolean register(RegisterDto registerDto) throws UserAlreadyExistException {
 
-        if (checkUserExistInDBUser(registerDto.getEmail(), registerDto.getUsername())) {
-            System.out.println("Email or username already exist");
-            throw new UserAlreadyExistException("Email or username already exist");
+        boolean created = false;
+
+        Customer user = userRepository.findCustomerByEmailOrUsername(registerDto.getEmail(), registerDto.getUsername()).orElse(null);
+
+        if (user != null) {
+            if (user.getStatus() == 0) {
+                created = true;
+            } else {
+                throw new UserAlreadyExistException("User already exist");
+            }
         }
 
         if (!registerDto.getPassword().equals(registerDto.getConfirmPassword())) {
@@ -76,13 +80,12 @@ public class UserService {
 
         Customer newUser = serializerToUser(registerDto, otpCode);
 
+        if (created) {
+            newUser.setId(user.getId());
+        }
+
         try {
-            userRepository.insertCustomerWithOtp(
-                    newUser.getFullName(),
-                    newUser.getUsername(),
-                    newUser.getPassword(),
-                    newUser.getEmail()
-            );
+            userRepository.save(newUser);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             throw new UserAlreadyExistException(e.getMessage());
@@ -93,64 +96,85 @@ public class UserService {
             throw new UserAlreadyExistException("Email not valid");
         }
 
-        OTP otp = serializerToOTP(registerDto, otpCode);
+        OTP otp = serializerToOTP(registerDto.getEmail(), registerDto.getUsername(), otpCode);
 
         otpRepository.save(otp);
 
         return true;
     }
 
-    private boolean checkUserExistInDBUser(String email, String username) {
-        return userRepository.selectCustomerByEmailOrUsername(username, email).isPresent();
+    public void reSendOtp(String email) throws UserAlreadyExistException {
+        Customer user = userRepository.findCustomerByEmailOrUsername(email, "").orElse(null);
+        if (user == null) {
+            throw new UserAlreadyExistException("User not exist");
+        }
+        Map<String, String> props = new HashMap<>();
+
+        Map<String, Object> templateModel = new HashMap<>();
+
+        String otpCode = CommonHelper.generateOTP(6);
+
+        props.put("otp", otpCode);
+
+        templateModel.put("props", props);
+
+        try {
+            mailService.sendMessageUsingThymeleafTemplate(email, "PTIT", templateModel);
+        } catch (Exception e) {
+            throw new UserAlreadyExistException("Email not valid");
+        }
+
+        OTP otp = serializerToOTP(email, user.getUsername(), otpCode);
+
+        otpRepository.save(otp);
     }
 
     private Customer serializerToUser(RegisterDto registerDto, String otp) {
         Customer user = new Customer();
         user.setFullName(registerDto.getFullName());
-        user.setUserName(registerDto.getUsername());
+        user.setUsername(registerDto.getUsername());
         user.setEmail(registerDto.getEmail());
-        user.setPassword(registerDto.getPassword());
+        user.setPassword(EncodingHelper.hashPassword(registerDto.getPassword()));
         user.setUserGroup(userGroupRepository.findUserGroupById(3));
+        user.setStatus(0);
         return user;
     }
 
-    private OTP serializerToOTP(RegisterDto registerDto, String o) {
+    private OTP serializerToOTP(String email, String username, String o) {
         OTP otp = new OTP();
         otp.setOtp(o);
-        otp.setUserName(registerDto.getUsername());
-        otp.setEmail(registerDto.getEmail());
+        otp.setUserName(username);
+        otp.setEmail(email);
         otp.setStatus(Boolean.FALSE);
         otp.setCreated(new Date());
         return otp;
     }
 
     public Customer login(LoginDto loginDto) throws UsernameOrPasswordNotValid {
-        if (userRepository.findUserByUserName(loginDto.getUsername()).isEmpty()) {
+        if (userRepository.findCustomerByUsername(loginDto.getUsername()).isEmpty()) {
             throw new UsernameOrPasswordNotValid("Username or password not valid");
         }
 
         String encodedPassword = EncodingHelper.hashPassword(loginDto.getPassword());
 
-        if (userRepository.findUserByUserNameAndPassword(loginDto.getUsername(), encodedPassword).isEmpty()) {
-
+        if (userRepository.findUserByUsernameAndPassword(loginDto.getUsername(), encodedPassword).isEmpty()) {
             throw new UsernameOrPasswordNotValid("Username or password not valid");
         }
 
-        return userRepository.findUserByUserName(loginDto.getUsername()).get();
+        return userRepository.findCustomerByUsername(loginDto.getUsername()).get();
     }
 
     public void verify(VerifyEmailDto verifyEmailDto) throws UserAlreadyExistException {
         OTP otp = otpRepository.findAll(
-                Specification
-                        .where(
-                                OtpRepository.findByEmailOrUserName(
-                                        verifyEmailDto.getEmail(), ""
-                                )))
+                        Specification
+                                .where(
+                                        OtpRepository.findByEmailOrUserName(
+                                                verifyEmailDto.getEmail(), ""
+                                        )))
                 .stream()
                 .findFirst()
                 .orElse(null);
 
-        System.out.println(otp);
 
         if (otp == null) {
             throw new UserAlreadyExistException("OTP not valid");
@@ -168,8 +192,8 @@ public class UserService {
 
         otpRepository.save(otp);
 
-        Customer user = userRepository.findUserByUserName(otp.getUserName()).isPresent() ?
-                userRepository.findUserByUserName(otp.getUserName()).get() :
+        Customer user = userRepository.findCustomerByUsername(otp.getUserName()).isPresent() ?
+                userRepository.findCustomerByUsername(otp.getUserName()).get() :
                 null;
 
         if (user == null) {
@@ -181,7 +205,9 @@ public class UserService {
 
     public Page<Customer> selectCustomerDecryption(Pageable pageable) {
 
-        List<Customer> list = userRepository.selectCustomerDecryption();
+        List<Customer> list = userRepository.findAll();
+
+        System.out.println(list);
 
         return new PageImpl<>(list, pageable, list.size());
     }
@@ -203,7 +229,7 @@ public class UserService {
     }
 
     public Customer getUserByUserName(String username) {
-        return userRepository.findUserByUserNameAndStatus(username, 1).orElse(null);
+        return userRepository.findUserByUsernameAndStatus(username, 1).orElse(null);
     }
 
     public Customer getCurrentUser() {
@@ -212,8 +238,44 @@ public class UserService {
     }
 
     @Transactional
-    public Customer getCustomerDecryptionByUsername() {
+    public Optional<Customer> getCustomer() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return userRepository.selectCustomerDecryptionByUsername(authentication.getName());
+        return userRepository.findCustomerByUsername(authentication.getName());
+    }
+
+    @Transactional
+    public void update(ProfileDto profileDto) throws UsernameOrPasswordNotValid {
+        if (profileDto.getFullname() == null || profileDto.getPhone() == null
+                || profileDto.getFullname().isEmpty() || profileDto.getPhone().isEmpty()
+        ) {
+            throw new UsernameOrPasswordNotValid("Thông tin không hợp lệ");
+        }
+        Customer user = getCurrentUser();
+        user.setFullName(profileDto.getFullname());
+        user.setPhone(profileDto.getPhone());
+        userRepository.save(user);
+    }
+
+    @Transactional
+    public void updatePassword(UpdatePasswordDto updatePasswordDto) throws UsernameOrPasswordNotValid {
+        if (
+                updatePasswordDto.getOldPassword() == null ||
+                        updatePasswordDto.getNewPassword() == null ||
+                        updatePasswordDto.getConfirmPassword() == null ||
+                        updatePasswordDto.getOldPassword().isEmpty() ||
+                        updatePasswordDto.getNewPassword().isEmpty() ||
+                        updatePasswordDto.getConfirmPassword().isEmpty()
+        ) {
+            throw new UsernameOrPasswordNotValid("Mật khẩu không hợp lệ");
+        }
+        if (!updatePasswordDto.getNewPassword().equals(updatePasswordDto.getConfirmPassword())) {
+            throw new UsernameOrPasswordNotValid("Mật khẩu không hợp lệ");
+        }
+        Customer user = getCurrentUser();
+        if (!EncodingHelper.hashPassword(updatePasswordDto.getOldPassword()).equals(user.getPassword())) {
+            throw new UsernameOrPasswordNotValid("Mật khẩu không hợp lệ");
+        }
+        user.setPassword(EncodingHelper.hashPassword(updatePasswordDto.getNewPassword()));
+        userRepository.save(user);
     }
 }

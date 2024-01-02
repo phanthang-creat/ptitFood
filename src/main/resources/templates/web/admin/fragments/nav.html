@@ -37,7 +37,7 @@
         class="navbar navbar-expand-sm navbar-light sticky-top bg-light"
       >
         <a class="navbar-brand" href="#">
-			<img id="image-1" alt=""  width="50px" src="https://www.tranlegroup.com/Uploads/Image/logo-dep/4.JPG"/>
+			<img id="image-1" alt=""  width="50px" src="/static/images/logo2.png"/>
 		</a>
         <button
           class="navbar-toggler d-lg-none"
@@ -80,6 +80,11 @@
             <li  sec:authorize="hasAuthority('ADMIN')" class="nav-item">
               <a class="nav-link" th:href="@{/admin/discounts}"
               >Discount</a
+              >
+            </li>
+            <li  sec:authorize="hasAuthority('ADMIN')" class="nav-item">
+              <a class="nav-link" th:href="@{/admin/orders}"
+              >Orders</a
               >
             </li>
           </ul>

@@ -28,11 +28,16 @@ public class AdminControlService {
         String encodedPassword = EncodingHelper.hashPassword(loginDto.getPassword());
 
         if (adminRepository.findAdminByUserNameAndPassword(loginDto.getUsername(), encodedPassword) == null) {
-
             throw new UsernameOrPasswordNotValid("Username or password not valid");
         }
 
-        return adminRepository.findAdminByUserNameAndPassword(loginDto.getUsername(), encodedPassword);
+        Admin admin =  adminRepository.findAdminByUserNameAndPassword(loginDto.getUsername(), encodedPassword);
+
+        if (admin.getStatus() == 0 || admin.getUserGroup() == null) {
+            throw new UsernameOrPasswordNotValid("Permission denied");
+        }
+
+        return admin;
     }
 
     public Admin getAdminById(Integer id) {

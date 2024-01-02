@@ -16,15 +16,13 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import jakarta.validation.Validation;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -107,23 +105,32 @@ public class Authentication {
         )
             throws UserAlreadyExistException
     {
-        String captcha = request.getParameter("g-recaptcha-response");
+        try {
+            String captcha = request.getParameter("g-recaptcha-response");
 
-        captchaService.processResponse(captcha);
+            captchaService.processResponse(captcha);
 
-        boolean result = userService.register(registerDto);
+            boolean result = userService.register(registerDto);
 
-        if (result) {
-            model.addAttribute("account", new RegisterDto());
-            model.addAttribute("message", "Register success");
-            model.addAttribute("verifyEmail", registerDto.getEmail());
-            return "web/portal/auth/verify-email";
-        } else {
+            if (result) {
+                model.addAttribute("account", new RegisterDto());
+                model.addAttribute("message", "Register success");
+                model.addAttribute("verifyEmail", registerDto.getEmail());
+                return "web/portal/auth/verify-email";
+            } else {
+                model.addAttribute("account", registerDto);
+                model.addAttribute("message", "Register failed");
+            }
+
+            return "web/portal/auth/register";
+        } catch (Exception e) {
+            if (e instanceof ReCaptchaInvalidException) {
+                model.addAttribute("captchaFailed", "Captcha invalid");
+            }
             model.addAttribute("account", registerDto);
-            model.addAttribute("message", "Register failed");
+            model.addAttribute("message", e.getMessage());
+            return "web/portal/auth/register";
         }
-
-        return "web/portal/auth/register";
     }
 
     @PostMapping("login")
@@ -135,7 +142,6 @@ public class Authentication {
             Model model
     ) throws Exception {
         try {
-
             if (bucket.tryConsume(1)) {
 
             } else {
@@ -167,8 +173,6 @@ public class Authentication {
             return "redirect:/";
 
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-
             if (e instanceof ReCaptchaInvalidException) {
                model.addAttribute("captchaFailed", "Captcha invalid");
             }
@@ -181,16 +185,43 @@ public class Authentication {
         }
     }
 
+//    @PostMapping("refresh/otp")
+
+
     @GetMapping("verify")
-    public String verify() {
+    public String verify(
+            Model model,
+            HttpServletRequest request
+    ) {
         return "web/portal/auth/verify-email";
     }
 
     @PostMapping("verify")
     @Transactional
-    public String verify(@Valid VerifyEmailDto verifyEmailDto) throws UserAlreadyExistException {
-        userService.verify(verifyEmailDto);
-        return "redirect:/auth/login";
+    public String verify(
+            @Valid VerifyEmailDto verifyEmailDto,
+            Model model
+    ) throws UserAlreadyExistException {
+        try {
+            userService.verify(verifyEmailDto);
+            return "redirect:/auth/login";
+        } catch (UserAlreadyExistException e) {
+            model.addAttribute("verifyEmail", verifyEmailDto.getEmail());
+            model.addAttribute("message", e.getMessage());
+            return "web/portal/auth/verify-email";
+        }
+    }
+
+    @PostMapping("resend")
+    @Transactional
+    public String reSendOTP(
+            @RequestParam String email,
+            Model model
+    ) throws UserAlreadyExistException {
+        userService.reSendOtp(email);
+        model.addAttribute("verifyEmail", email);
+        model.addAttribute("message", "Mã OTP đã được gửi lại");
+        return "web/portal/auth/verify-email";
     }
 
     @PostMapping("logout")

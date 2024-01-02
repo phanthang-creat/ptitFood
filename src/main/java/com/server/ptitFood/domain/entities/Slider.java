@@ -16,13 +16,13 @@ public class Slider {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false, name = "name", columnDefinition = "VARBINARY(600) NOT NULL")
+    @Column(nullable = false, name = "name", columnDefinition = "VARCHAR(255) NOT NULL")
     private String name;
 
-    @Column(nullable = false, name = "code", columnDefinition = "VARBINARY(600) NOT NULL")
+    @Column(nullable = false, name = "code", columnDefinition = "VARCHAR(255) NOT NULL")
     private String link;
 
-    @Column(nullable = false, name = "keyword", columnDefinition = "varbinary(600) NOT NULL")
+    @Column(nullable = false, name = "keyword", columnDefinition = "VARCHAR(255) NOT NULL")
     private Integer level;
 
     @Column(nullable = false, name = "created_at", columnDefinition = "DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP")

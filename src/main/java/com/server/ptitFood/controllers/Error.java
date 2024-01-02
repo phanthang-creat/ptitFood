@@ -29,6 +29,9 @@ public class Error implements ErrorController {
                 return "redirect:/auth/logout";
             }
         }
+
+        System.out.println("Error: " + status);
+
         return "/web/404";
     }
 

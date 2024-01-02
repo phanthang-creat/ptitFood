@@ -68,9 +68,13 @@
           ></div>
           <span id="captchaError" class="alert alert-danger col-sm-4"
                 style="display:none"></span>
-<!--          <div th:if="${captchaFailed}" class="alert alert-danger" role="alert">-->
-<!--            <i>Captcha không hợp lệ</i>-->
-<!--          </div>-->
+          <div th:if="${captchaFailed}" class="alert alert-danger" role="alert">
+            <i>Captcha không hợp lệ</i>
+          </div>
+        <div th:if="${message}" class="alert alert-danger" role="alert">-->
+            <i th:text="${message}">
+            </i>
+        </div>
           <div class="card-footer text-muted pl-0 pr-0">
             <div class="">
               <button type="submit" class="btn btn-primary w-100">
@@ -83,12 +87,6 @@
                   Đăng nhập
                 </a>
               </p>
-            </div>
-            <hr>
-            <div class="text-center">
-              <a href="/portal/login/google" class="btn btn-danger">
-                <i class="fab fa-google mr-1"></i>Đăng nhập bằng Google
-              </a>
             </div>
           </div>
         </div>

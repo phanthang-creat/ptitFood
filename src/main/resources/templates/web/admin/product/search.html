@@ -71,12 +71,12 @@
                   <tr th:each="item , iStat : ${products}">
                     <td th:text="${item.getId()}"></td>
                     <td th:text="${item.getName()}"></td>
-                    <td th:text="${item.getCategory().getName()}">
+                    <td th:text="${item.getCategory() != null ? item.getCategory().getName() : 'Không có'}">
                       Không có
                     </td>
                     <td>
                       <a
-                        th:href="@{'/admin/customers/edit/' + ${item.getId()}}"
+                        th:href="@{'/admin/products/edit/' + ${item.getId()}}"
                         class="btn btn-outline-warning"
                         ><i class="fas fa-edit"></i
                       ></a>

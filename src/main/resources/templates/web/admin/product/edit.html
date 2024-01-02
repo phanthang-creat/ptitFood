@@ -4,16 +4,16 @@
 
 <head>
   <meta charset="UTF-8">
-  <title th:text="${producer.getName()}"></title>
+  <title th:text="${product.getName()}"></title>
 </head>
 
 <body>
 <section class="row" layout:fragment="content">
   <div class="col mt-4">
-    <form th:action="@{/admin/producers/edit/{id}(id=${producer.getId()})}" method="post" th:object="${producer}">
+    <form th:action="@{/admin/products/edit/{id}(id=${product.getId()})}" method="post" th:object="${product}">
       <div class="card">
         <div class="card-header">
-          <h2 th:text="${producer.getName()}"></h2>
+          <h2 th:text="${product.getName()}"></h2>
         </div>
         <div class="card-body">
           <div th:if="${message != null}" class="alert alert-danger" role="alert">
@@ -23,18 +23,109 @@
             <div class="col-2">
               <div class="form-group">
                 <label for="id">Id</label>
-                <input type="text" class="form-control" name="id" id="id" th:value="${producer.getId()}"
+                <input type="text" class="form-control" name="id" id="id" th:value="${product.getId()}"
                                                aria-describedby="idHid" placeholder="Mã nhà cung cấp..." readonly th:field="*{id}" />
               </div>
             </div>
             <div class="col-6">
               <div class="form-outline">
                 <label class="form-label" for="name">Tên</label>
-                <input type="text" name="name" id="name" th:value="${producer.getName()}" placeholder="Tên nhà cung cấp..." class="form-control" />
-                <!--                                <small th:if="${#fields.hasErrors()}" id="nameHip" class="form-text text-muted"><span-->
-                <!--                                        th:errors="*{}" style="color: red"></span></small>-->
+                <input type="text" name="name" id="name" th:value="${product.getName()}" placeholder="Tên nhà cung cấp..." class="form-control" />
+              </div>
+
+            </div>
+            <div class="col-4">
+
+              <div class="form-outline">
+                <label class="form-label" for="alias">Tên</label>
+                <input type="text" name="alias" disabled id="alias" th:value="${product.getAlias()}" placeholder="Tên nhà cung cấp..." class="form-control" />
               </div>
             </div>
+          </div>
+
+          <div class="row mb-4">
+            <div class="col-6">
+              <div class="form-outline">
+                <label class="form-label" for="price">Giá</label>
+                <input type="text" name="price" id="price" th:value="${product.getPrice()}" placeholder="Giá..." class="form-control" />
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-outline">
+                <label class="form-label" for="priceSale">Giá khuyến mãi</label>
+                <input type="text" name="priceSale" id="priceSale" th:value="${product.getPriceSale()}" placeholder="Giá khuyến mãi..." class="form-control" />
+                </div>
+            </div>
+          </div>
+
+          <div class="row mb-4">
+              <div class="col-6">
+              <div class="form-outline">
+                  <label class="form-label" for="number">Số lượng trong kho</label>
+                  <input type="text" name="number" id="number" th:value="${product.getNumber()}" placeholder="Số lượng..." class="form-control" />
+              </div>
+              </div>
+              <div class="col-6">
+                <div class="form-outline">
+                  <label class="form-label" for="numberBuy">Số lượng bán</label>
+                  <input type="text" name="numberBuy" id="numberBuy" th:value="${product.getNumberBuy()}" placeholder="Số lượng..." class="form-control" />
+                </div>
+              </div>
+          </div>
+
+          <div class="row mb-4">
+            <!--          Danh mục              -->
+            <div class="col">
+              <div class="form-outline">
+                <label for="catId">
+                  Danh mục sản phẩm
+                </label>
+                <div class="input-group mb-3">
+                  <select class="custom-select" id="catId" name="catId">
+                    <option value="0">Chọn danh mục</option>
+                    <option th:each="category : ${categories}"
+                            th:value="${category.id}"
+                            th:text="${category.name}"
+                            th:selected="${product.getCatId() != null && product.getCatId() == category.getId()}"
+                    ></option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!--          Nhà cung cấp              -->
+            <div class="col">
+              <div class="form-outline">
+                <label for="producerId">
+                  Nhà cung cấp
+                </label>
+                <div class="input-group mb-3">
+                  <select class="custom-select" id="producerId" name="producerId">
+                    <option value="0">Chọn nhà cung cấp</option>
+                    <option
+                            th:each="producer : ${producers}"
+                            th:value="${producer.id}"
+                            th:text="${producer.name}"
+                            th:selected="${product.getProducerId() != null
+                            && product.getProducerId() == producer.getId()}"
+                    ></option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <div class="form-outline">
+                <label class="form-label" for="detail">Chi tiết</label>
+                <textarea class="form-control" name="detail" id="detail" rows="3" placeholder="Chi tiết..."
+                            th:text="${product.getDetail()}"></textarea>
+
+              </div>
+            </div>
+
+          </div>
+          <div class="row">
             <div class="col">
               <div class="form-outline">
                 <label for="status">
@@ -42,27 +133,10 @@
                 </label>
                 <div class="input-group mb-3">
                   <select class="custom-select" id="status" name="status">
-                    <option th:selected="${producer.getStatus() == 1}" value="1">Hoạt động</option>
-                    <option th:selected="${producer.getStatus() == 2}" value="2">Không hoạt động</option>
+                    <option th:selected="${product.getStatus() == 1}" value="1">Hoạt động</option>
+                    <option th:selected="${product.getStatus() == 2}" value="2">Không hoạt động</option>
                   </select>
                 </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="row">
-
-            <div class="col">
-              <div class="form-outline">
-                <label class="form-label" for="code">Code</label>
-                <input type="text" th:value="${producer.getCode()}" name="code" id="code" placeholder="Code nhà cung cấp..." class="form-control" />
-
-              </div>
-            </div>
-            <div class="col">
-              <div class="form-outline">
-                <label class="form-label" for="keywork">Keywork</label>
-                <input type="text" th:value="${producer.getKeywork()}" name="keywork" id="keywork" placeholder="Keywork nhà cung cấp..." class="form-control" />
               </div>
             </div>
           </div>
@@ -72,8 +146,8 @@
           <button type="reset" class="btn btn-secondary">Reset</button>
           <button class="btn btn-primary">
             <i class="fas fa-save"></i>
-            <span th:if="${producer.isEdit}">Cập nhập</span>
-            <span th:unless=" ${producer.isEdit}">Lưu</span>
+            <span th:if="${product.isEdit}">Cập nhập</span>
+            <span th:unless=" ${product.isEdit}">Lưu</span>
           </button>
         </div>
       </div>

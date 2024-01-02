@@ -29,25 +29,51 @@
                 <div class="col-md-6"><img class="card-img-top mb-5 mb-md-0" th:src="${'/static/images/' + product.getImg()}" alt="..."></div>
                 <div class="col-md-6">
                     <h1 class="display-5 fw-bolder" th:text="${product.getName()}"></h1>
+                    <div>
+                        <span th:if="${product.getNumberBuy() > 0}" class="badge bg-success text-wrap" style="width: 6rem;">
+                            <i class="fas fa-check-circle me-1"></i>
+                            Còn hàng
+                        </span>
+                        <span th:if="${product.getNumberBuy() == 0}" class="badge bg-danger text-wrap" style="width: 6rem;">
+                            <i class="fas fa-times-circle me-1"></i>
+                            Hết hàng
+                        </span>
+                    </div>
                     <div class="fs-5 mb-5">
-                        <span class="text-decoration-line-through" th:text="${product.getPrice() + 'đ'}">
+                        <span class="">
+                            Đơn giá:
                         </span>
                         <span th:text="${product.getPriceSale() + 'đ'}">
                         </span>
+                        <span class="text-decoration-line-through text-muted" th:text="${product.getPrice() + 'đ'}">
+                        </span>
                     </div>
                     <p class="lead" th:text="${product.getDetail()}"></p>
+<!--                    Sale if -->
                     <form th:action="@{'/cart/add'}" method="post">
                         <div class="d-flex">
                             <label for="quantity">
                             </label>
                             <input name="productId" type="hidden" th:value="${product.getId()}">
-                            <input name="quantity" class="form-control text-center me-3" id="quantity" type="number" value="1" style="max-width: 3rem" min="1">
-                            <button class="btn btn-outline-dark flex-shrink-0" type="submit">
+                            <input type="hidden" name="alias" th:value="${product.getAlias()}">
+                            <input
+                                    name="quantity"
+                                    class="form-control text-center me-3"
+                                    id="quantity"
+                                    type="number"
+                                    value="1"
+                                    style="max-width: 4rem"
+                                    min="1"
+                                    max="${product.getNumberBuy()}"
+                                    th:disabled="${product.getNumberBuy() == 0}"
+                            >
+                            <button class="btn btn-outline-dark flex-shrink-0" type="submit" th:disabled="${product.getNumberBuy() == 0}">
                                 <i class="bi-cart-fill me-1">
                                 </i>Add to cart
                             </button>
                         </div>
                     </form>
+
                 </div>
             </div>
         </div>

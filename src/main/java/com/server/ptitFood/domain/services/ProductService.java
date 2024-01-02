@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductService {
@@ -31,6 +32,17 @@ public class ProductService {
     }
 
     public void addProduct(ProductDto dto) {
+
+        if (dto.getNumberBuy() > dto.getNumber()) {
+            throw new RuntimeException("Số lượng sản phẩm không đủ");
+        }
+
+        Product currentProduct = productRepository.findProductByAliasAndStatus(dto.getAlias(), 1);
+
+        if (currentProduct != null) {
+            throw new RuntimeException("Alias đã tồn tại");
+        }
+
         Admin id = adminControlService.getAdminByUserName();
 
         Product product = new Product();
@@ -81,10 +93,45 @@ public class ProductService {
     public void save(Product product) {
         productRepository.save(product);
     }
-    public void updateProduct() {
+    public void updateProduct(ProductDto dto) {
+        Admin id = adminControlService.getAdminByUserName();
+
+        Optional<Product> product = productRepository.findById(dto.getId());
+
+        if (dto.getNumberBuy() > dto.getNumber()) {
+            throw new RuntimeException("Số lượng sản phẩm không đủ");
+        }
+
+        if (product.isEmpty()) {
+            throw new RuntimeException("Product not found");
+        } else {
+            product.get().setName(dto.getName());
+            product.get().setPrice(dto.getPrice());
+            product.get().setCategory(cate.selectCategoryDecryptionById(dto.getCatId()));
+            product.get().setProducer(producerService.selectProductDecryptionById(dto.getProducerId()));
+            product.get().setDetail(dto.getDetail());
+            product.get().setPrice(dto.getPrice());
+            product.get().setPriceSale(dto.getPriceSale());
+            product.get().setNumber(dto.getNumber());
+            product.get().setNumberBuy(dto.getNumberBuy());
+            product.get().setImg(dto.getImg());
+            product.get().setAvatar(dto.getAvatar());
+            product.get().setUpdatedBy(id);
+            product.get().setStatus(dto.getStatus());
+            product.get().setUpdated(new Date(System.currentTimeMillis()));
+            productRepository.save(product.get());
+        }
     }
 
-    public void deleteProduct() {
+    public void deleteProduct(Integer id) {
+        Optional<Product> product = productRepository.findById(id);
+
+        if (product.isEmpty()) {
+            throw new RuntimeException("Product not found");
+        } else {
+            product.get().setStatus(0);
+            productRepository.save(product.get());
+        }
     }
 
     public void findProductByCategory() {

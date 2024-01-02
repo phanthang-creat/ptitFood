@@ -48,7 +48,7 @@
                 </label>
                 <div class="input-group mb-3">
                   <select class="custom-select" id="parentId" name="parentId">
-                    <option selected="selected" th:if="${currentDto.getParentId() == null}" value="null">Không có</option>
+                    <option selected="selected" th:if="${currentDto.getParentId() == null}" value="">Không có</option>
                     <option
                             th:each="category : ${categories}"
                             th:value="${category.id}"

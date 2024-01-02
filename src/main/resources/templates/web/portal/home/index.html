@@ -45,7 +45,7 @@
     <section style="background-color: #eee;">
         <div class="pt-4">
             <h2 class="text-center mt-5 mb-5">
-                <span class="badge bg-secondary" th:if="${nameSearch == null}">Sản phẩm mới</span>
+                <span class="badge bg-secondary" th:if="${nameSearch == null}">Tất cả sản phẩm</span>
                 <span class="" th:if="${nameSearch != null}">Kết quả tìm kiếm: </span>
                 <strong th:if="${nameSearch != null}" th:text="${nameSearch}"></strong>
             </h2>
@@ -61,12 +61,12 @@
                             <h5 th:text="${item.getName()}"></h5>
                             <div class="mt-1 mb-1 spec-1">
                                 <span>Danh mục: </span>
-                                <span th:text="${item.getCategory().getName()}"></span>
+                                <span th:if="${item.getCategory() != null}" th:text="${item.getCategory().getName()}"></span>
                             </div>
                             <div class="mt-1 mb-1 spec-1">
                                 <span>Nhà cung cấp: </span>
                                 <span th:if="${item.getProducer() != null}" th:text="${item.getProducer().getName()}"></span>
-                                <span th:if="${item.getProducer() == null}" th:text="${'PtitFood'}"></span>
+                                <span th:if="${item.getProducer() == null}" th:text="${'Không có'}"></span>
                             </div>
                             <p class="text-justify text-truncate para mb-0">
                                 <span th:text="${item.getDetail()}"></span>
@@ -81,11 +81,20 @@
                             </div>
                             <div class="d-flex flex-column mt-4">
                                 <a class="btn btn-primary btn-sm" type="button" th:href="@{'/product/' + ${item.getAlias()}}">
-                                    Details
+                                    Chi tiết
                                 </a>
-                                <a class="btn btn-outline-primary btn-sm mt-2" type="button" th:href="@{'/cart/add/' + ${item.getId()}}">
-                                    Add to wishlist
-                                </a></div>
+                                <form class="form-inline d-flex justify-content-center md-form form-sm"
+                                    th:action="@{/cart/add/{id}(id=${item.getId()})}" method="post">
+                                    <input class="form-control form-control-sm mr-3 w-75" type="number" placeholder="Số lượng"
+                                           aria-label="Search" name="quantity" value="1" hidden>
+                                    <button class="btn btn-outline-primary btn-sm mt-2 w-100" type="submit">
+                                        <i class="fas fa-cart-plus"></i>
+                                        Thêm vào giỏ hàng
+                                    </button>
+                                </form>
+
+
+                                </div>
                         </div>
                     </div>
                 </div>

@@ -40,7 +40,6 @@ public class SecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .exceptionHandling((e) -> {
-                    // redirect to login page when user is not authenticate
                     e.authenticationEntryPoint(
                             ((request, response, authException) -> response.sendRedirect("/auth/login"))
                     );
@@ -71,7 +70,7 @@ public class SecurityConfig {
 
     @Bean
     UserDetailsService customUserDetailsService(UserRepository users) {
-        return (username) -> users.findUserByUserName(username)
+        return (username) -> users.findCustomerByUsername(username)
                 .orElseThrow(() -> new BadCredentialsException("User not found"));
 
     }

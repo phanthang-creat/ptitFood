@@ -32,8 +32,8 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-4 border-end">
-                                    <h4>Profile</h4>
-                                    <p>Manage your profile</p>
+                                    <h4>Trang cá nhân</h4>
+                                    <p>Quản lý thông tin cá nhân</p>
                                 </div>
                                 <div class="col-md-8">
                                     <div class="card border-0">
@@ -43,58 +43,77 @@
                                                     <h4>Thông tin cá nhân</h4>
                                                     <hr>
                                                 </div>
+                                                <div class="col-md-12">
+                                                    <div th:if="${error}" class="alert alert-danger">
+                                                        <div th:text="${error}"></div>
+                                                    </div>
+                                                </div>
                                             </div>
                                             <div class="row">
-                                                <div class="col-md-6">
-                                                    <label for="fullname">Họ và tên</label>
-                                                    <input id="fullname" name="fullname" type="text" class="form-control" th:value="${user.getFullName()}">
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <label for="email">Email</label>
-                                                    <input disabled id="email" type="email" class="form-control" th:value="${user.getEmail()}">
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <label for="phone">Số điện thoại</label>
-                                                    <input id="phone" name="phone" type="text" class="form-control" th:value="${user.getPhone()}">
-                                                </div>
-                                                <div class="col-md-12">
-                                                    <label for="">Address</label>
-                                                    <textarea name="" id="" cols="30" rows="5" class="form-control">Address</textarea>
-                                                </div>
-                                                <div class="col-md-12">
-                                                    <button class="btn btn-primary mt-3">Save Changes</button>
-                                                </div>
+<!--                                                error-->
+                                                <form action="/profile/update" method="post">
+                                                    <div class="col-md-6">
+                                                        <label for="fullname">Họ và tên</label>
+                                                        <input id="fullname" name="fullname" type="text" class="form-control" th:value="${user.getFullName()}">
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="email">Email</label>
+                                                        <input disabled id="email" type="email" class="form-control" th:value="${user.getEmail()}">
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="phone">Số điện thoại</label>
+                                                        <input id="phone" name="phone" type="text" class="form-control" th:value="${user.getPhone()}">
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <button class="btn btn-primary mt-3">Lưu thay đổi</button>
+                                                    </div>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="card border-0 mt-3">
-                                            <div class="card-body">
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        <h4>Change Password</h4>
-                                                        <hr>
-                                                    </div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <h4>Change Password</h4>
+                                                    <hr>
                                                 </div>
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        <label for="">Current Password</label>
-                                                        <input type="password" class="form-control" value="">
-                                                    </div>
-                                                    <div class="col-md-12">
-                                                        <label for="">New Password</label>
-                                                        <input type="password" class="form-control" value="">
-                                                    </div>
-                                                    <div class="col-md-12">
-                                                        <label for="">Confirm Password</label>
-                                                        <input type="password" class="form-control" value="">
-                                                    </div>
-                                                    <div class="col-md-12">
-                                                        <button class="btn btn-primary mt-3">Save Changes</button>
+                                                <div class="col-md-12">
+                                                    <div th:if="${passwordError}" class="alert alert-danger">
+                                                        <div th:text="${passwordError}"></div>
                                                     </div>
                                                 </div>
                                             </div>
-                                          </div>
+                                            <div class="row">
+                                                <form action="/profile/update-password" autocomplete="off" method="post">
+                                                    <div class="col-md-12">
+                                                        <label for="current-password">Mật khẩu hiện tại</label>
+                                                        <input
+                                                                name="current-password"
+                                                                id="current-password"
+                                                                type="password"
+                                                                class="form-control"
+                                                                value=""
+                                                                autocomplete="off"
+                                                        >
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <label for="new-password">Mật khẩu mới</label>
+                                                        <input type="password" class="form-control" value="" name="new-password" id="new-password">
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <label for="confirm-password">Xác nhận mật khẩu</label>
+                                                        <input type="password" class="form-control" value="" name="confirm-password" id="confirm-password">
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <button class="btn btn-primary mt-3">Đổi mật khẩu</button>
+                                                    </div>
+                                                </form>
+                                            </div>
                                         </div>
+
+                                    </div>
+                                    </div>
                                     </div>
                                 </div>
                             </div>
@@ -117,7 +136,7 @@
                                             <th>Ngày đặt</th>
                                             <th>Tổng tiền</th>
                                             <th>Trạng thái</th>
-                                            <th>Chi tiết</th>
+                                            <th>Thao tác</th>
                                           </tr>
                                         </thead>
                                         <tbody>
@@ -125,7 +144,7 @@
                                             <td th:text="${order.getId()}"></td>
                                             <td th:text="${order.getOrderDate()}"></td>
                                             <td th:text="${order.getMoney()}"></td>
-                                            <td th:text="${order.getStatus()}"></td>
+                                            <td th:text="${order.getOrderStatus().getStatus()}"></td>
                                             <td>
                                               <a th:href="@{/profile/order/{id}(id=${order.getId()})}" class="btn btn-primary">Chi tiết</a>
                                             </td>

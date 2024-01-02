@@ -24,10 +24,10 @@ public class Product {
     @JoinColumn(name = "cat_id", referencedColumnName = "id")
     private Category category;
 
-    @Column(nullable = false, name = "name", columnDefinition = "VARBINARY(600) NOT NULL")
+    @Column(nullable = false, name = "name", columnDefinition = "VARCHAR(255) NOT NULL")
     private String name;
 
-    @Column(nullable = false, name = "alias", columnDefinition = "VARBINARY(600) NOT NULL")
+    @Column(nullable = false, name = "alias", columnDefinition = "VARCHAR(255) NOT NULL")
     private String alias;
 
     @Column(nullable = false, name = "img", columnDefinition = "VARCHAR(255) NOT NULL")

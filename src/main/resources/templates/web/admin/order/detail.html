@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{web/admin/dashBoardLayout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Đơn hàng</title>
+</head>
+<body>
+    <section class="h-100 gradient-custom" layout:fragment="content">
+        <div class="col mt-4">
+            <form th:action="@{/admin/orders/edit/{id}(id=${order.id})}" method="post" th:object="${order}">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Đơn hàng
+                        </h2>
+                    </div>
+                    <div class="card-body">
+                        <div th:if="${message != null}" class="alert alert-danger" role="alert" th:text="${message}">
+                        </div>
+                        <div class="row mb-4">
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="id">Mã đơn hàng</label>
+                                    <input type="text" class="form-control" name="id" id="id"
+                                       th:value="${order.id}"
+                                       aria-describedby="categoryIdHid" placeholder="Mã đơn hàng" readonly />
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-outline">
+                                    <label class="form-label" for="name">Khách hàng</label>
+                                    <input type="text" disabled id="name" placeholder="Tên khách hàng" class="form-control" th:value="${order.getFullname()}" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+
+                            <div class="col">
+                                <div class="form-outline">
+                                    <label class="form-label" for="phone">Số điện thoại</label>
+                                    <input type="text" disabled id="phone" placeholder="Số điện thoại" class="form-control" th:value="${order.getPhone()}" />
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-outline">
+                                    <label class="form-label" for="address">Địa chỉ</label>
+                                    <input type="text" disabled id="address" placeholder="Địa chỉ" class="form-control" th:value="${order.getAddress()}" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+                            <div class="col">
+                                <div class="form-outline">
+                                    <label for="status">
+                                        Trạng thái
+                                    </label>
+                                    <div class="input-group mb-3">
+                                        <select class="custom-select" id="status" name="status">
+                                            <option th:each="status : ${orderStatus}"
+                                                    th:value="${status.id}"
+                                                    th:text="${status.getStatus()}"
+                                                    th:selected="${status.id == order.getOrderStatus().id}"
+                                                    th:disabled="${status.id == order.getOrderStatus().id}"
+                                            ></option
+                                            >
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+                            <div class="col">
+                                <h3> Chi tiết đơn hàng
+                                </h3>
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+                            <div class="col">
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-inverse">
+                                        <thead class="thead-inverse">
+                                        <tr>
+                                            <th>STT</th>
+                                            <th>Tên sản phẩm</th>
+                                            <th>Số lượng</th>
+                                            <th>Giá</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="item, index : ${orderDetails}">
+                                            <td th:text="${index.index + 1}"></td>
+                                            <td th:text="${item.getProduct().getName()}"></td>
+                                            <td th:text="${item.getCount()}"></td>
+                                            <td th:text="${item.getProduct().getPrice()}"></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+                            <div class="col">
+                                <h5> Tổng tiền: <span th:text="${order.getMoney()}"></span>
+                                </h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer text-muted">
+                        <button type="reset" class="btn btn-secondary">Reset</button>
+                        <a th:href="@{/admin/orders}" class="btn btn-success text-white">Danh sách đơn hàng</a>
+                        <button class="btn btn-primary">
+                            <i class="fas fa-save"></i>
+                            <span>Cập nhập</span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+</body>

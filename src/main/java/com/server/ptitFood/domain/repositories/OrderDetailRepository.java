@@ -8,6 +8,8 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface OrderDetailRepository extends JpaRepository<OrderDetail, String> {
+public interface OrderDetailRepository extends JpaRepository<OrderDetail, Integer> {
     List<OrderDetail> findAllByOrder(Order order);
+
+
 }

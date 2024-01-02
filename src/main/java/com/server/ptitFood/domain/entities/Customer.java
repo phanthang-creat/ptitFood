@@ -26,15 +26,15 @@ public class Customer implements UserDetails {
     private String fullName;
 
     @Column(nullable = false, name = "username", columnDefinition = "VARCHAR(100) UNIQUE NOT NULL")
-    private String userName;
+    private String username;
 
-    @Column(nullable = false, name = "password", length = 600, columnDefinition = "VARBINARY(600) NOT NULL")
+    @Column(nullable = false, name = "password", length = 600, columnDefinition = "VARCHAR(255) NOT NULL")
     private String password;
 
-    @Column(nullable = false, name = "email", columnDefinition = "VARBINARY(600) UNIQUE NOT NULL")
+    @Column(nullable = false, name = "email", columnDefinition = "VARCHAR(255) UNIQUE NOT NULL")
     private String email;
 
-    @Column(nullable = false, name = "phone", length = 15, columnDefinition = "VARBINARY(600)")
+    @Column(nullable = false, name = "phone", length = 15, columnDefinition = "VARCHAR(255)")
     private String phone;
 
     @Column(nullable = false, name = "created", columnDefinition = "DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP")
@@ -57,7 +57,7 @@ public class Customer implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.userName;
+        return this.username;
     }
 
     @Override

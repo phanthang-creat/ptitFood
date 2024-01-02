@@ -33,7 +33,4 @@ public class OrderDetail {
 
     @Column(nullable = false, name = "price", columnDefinition = "INT")
     private Integer price;
-
-    @Column(nullable = false, name = "status", columnDefinition = "INT")
-    private Integer status;
 }

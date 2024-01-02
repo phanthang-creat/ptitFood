@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
 import java.util.List;
 
 @Service
@@ -27,17 +28,25 @@ public class ProducerService {
         return producerRepository.findById(Long.valueOf(id)).isPresent() ? producerRepository.findById(Long.valueOf(id)).get() : null;
     }
 
-    public void insertProducer(ProducerDto dto) {
-        Admin id = adminControlService.getAdminByUserName();
+    public boolean insertProducer(ProducerDto dto) {
+        try {
+            Admin id = adminControlService.getAdminByUserName();
+            Producer producer = new Producer();
+            producer.setName(dto.getName());
+            producer.setCode(dto.getCode());
+            producer.setKeyword(dto.getKeyword());
+            producer.setCreated(new Date(System.currentTimeMillis()));
+            producer.setUpdated(new Date(System.currentTimeMillis()));
+            producer.setCreatedBy(id);
+            producer.setUpdatedBy(id);
+            producer.setStatus(dto.getStatus());
+            producerRepository.save(producer);
 
-        Producer producer = new Producer();
-        producer.setName(dto.getName());
-        producer.setCode(dto.getCode());
-        producer.setKeyword(dto.getKeyword());
-        producer.setCreatedBy(id);
-        producer.setUpdatedBy(id);
-        producer.setStatus(dto.getStatus());
-        producerRepository.save(producer);
+            return true;
+        }
+        catch (Exception e) {
+            return false;
+        }
     }
 
     public Page<Producer> findAll(Pageable pageable) {

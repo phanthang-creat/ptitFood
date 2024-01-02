@@ -16,18 +16,18 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false, name = "name", columnDefinition = "VARBINARY(600) NOT NULL")
+    @Column(nullable = false, name = "name", columnDefinition = "VARCHAR(255) NOT NULL")
     private String name;
 
-    @Column(nullable = false, name = "link", columnDefinition = "VARBINARY(600) NOT NULL")
+    @Column(nullable = false, name = "link", columnDefinition = "VARCHAR(255) NOT NULL")
     private String link;
 
     @ManyToOne
     @JoinColumn(name = "parent_id", referencedColumnName = "id")
     private Category parentId;
 
-    @Column(nullable = true, name = "sort_desc", columnDefinition = "INT")
-    private Integer sortDesc;
+    //  @Column(nullable = true, name = "sort_desc", columnDefinition = "INT")
+    //    private Integer sortDesc;
 
     @Column(nullable = false, name = "created", columnDefinition = "DATETIME")
     private Date created;

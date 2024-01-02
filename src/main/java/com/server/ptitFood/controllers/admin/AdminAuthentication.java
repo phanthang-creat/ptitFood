@@ -29,20 +29,18 @@ public class AdminAuthentication {
     private final AdminControlService adminControlService;
     private final JwtTokenProvider jwtTokenProvider;
 
-    private final MessageSource messageSource;
+//    private final MessageSource messageSource;
 
     public AdminAuthentication(AdminControlService adminControlService, AdminControlService adminControlService1, JwtTokenProvider jwtTokenProvider, MessageSource messageSource) {
         this.adminControlService = adminControlService1;
         this.jwtTokenProvider = jwtTokenProvider;
-        this.messageSource = messageSource;
+//        this.messageSource = messageSource;
     }
 
     @GetMapping("login")
     public String login(Model model, HttpServletRequest request) {
 
         model.addAttribute("account",new LoginDto());
-        String message = messageSource.getMessage("hello", null, "default message", request.getLocale());
-        model.addAttribute("message", message);
 
         return "web/admin/login";
     }
@@ -90,11 +88,10 @@ public class AdminAuthentication {
             response.addCookie(cookie);
 
             return "redirect:/admin/home";
+
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            model.addAttribute("param", Map.of(
-                    "error", e.getMessage()
-            ));
+            System.out.println("Error: " + e.getMessage());
+            model.addAttribute("message", e.getMessage());
             model.addAttribute("account", new LoginDto(
                     loginDto.getUsername()
             ));

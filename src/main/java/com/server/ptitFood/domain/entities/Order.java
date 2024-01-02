@@ -4,8 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.sql.Date;
-import java.util.List;
-import java.util.Set;
+
 
 @Data
 @Getter
@@ -30,10 +29,10 @@ public class Order {
         @Column(nullable = false, name = "fullname", columnDefinition = "VARCHAR(100)")
         private String fullname;
 
-        @Column(nullable = false, name = "phone", columnDefinition = "varbinary(600)")
+        @Column(nullable = false, name = "phone", columnDefinition = "VARCHAR(255)")
         private String phone;
 
-        @Column(nullable = false, name = "address", columnDefinition = "varbinary(600)")
+        @Column(nullable = false, name = "address", columnDefinition = "VARCHAR(255)")
         private String address;
 
         @Column(nullable = false, name = "money", columnDefinition = "INT")
@@ -43,6 +42,7 @@ public class Order {
         @JoinColumn(name = "code_discount", referencedColumnName = "id")
         private Discount discount;
 
-        @Column(nullable = false, name = "status", columnDefinition = "INT")
-        private Integer status;
+        @ManyToOne()
+        @JoinColumn(name = "status", referencedColumnName = "id")
+        private OrderStatus orderStatus;
 }

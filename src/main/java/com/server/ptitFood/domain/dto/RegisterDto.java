@@ -15,6 +15,7 @@ public class RegisterDto {
     @ValidUsername(message = "Username is invalid.")
     private String username;
 
+    @ValidPassword(message = "Password is invalid.")
     private String password;
 
     private String confirmPassword;

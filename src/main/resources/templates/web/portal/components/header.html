@@ -15,7 +15,7 @@
     <header  >
       <div th:fragment="header" id="sticked-menu">
           <nav class="navbar navbar-expand-lg navbar-light bg-light">
-              <a class="navbar-brand" href="#">
+              <a class="navbar-brand" href="/">
                   <img src="/static/images/logo2.png" alt="" style="width: 90px; height: auto">
               </a>
               <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -25,26 +25,11 @@
               <div class="collapse navbar-collapse" id="navbarSupportedContent">
                   <ul class="navbar-nav mr-auto">
                       <li class="nav-item active">
-                          <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+                          <a class="nav-link" href="/">Trang chủ <span class="sr-only">(current)</span></a>
                       </li>
                       <li class="nav-item">
-                          <a class="nav-link" href="#">Link</a>
+                          <a class="nav-link" href="/gioi-thieu">Giới thiệu</a>
                       </li>
-                      <li class="nav-item dropdown">
-                          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                              Dropdown
-                          </a>
-                          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                              <a class="dropdown-item" href="#">Action</a>
-                              <a class="dropdown-item" href="#">Another action</a>
-                              <div class="dropdown-divider"></div>
-                              <a class="dropdown-item" href="#">Something else here</a>
-                          </div>
-                      </li>
-                      <li class="nav-item">
-                          <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-                      </li>
-
                   </ul>
                   <div class="my-2 my-lg-0">
                       <a class="btn my-2 my-sm-0 bg-transparent"  th:href="@{/cart/detail}">
@@ -61,9 +46,8 @@
                       <form th:action="@{/auth/logout}" method="post">
                           <button type="submit" class="btn my-2 my-sm-0 bg-transparent">
                               <img src="/static/images/logout.png" alt="logout" style="height: 16px; width: 16px;">
-                            </button>
-                    </form>
-
+                          </button>
+                      </form>
                   </div>
               </div>
           </nav>

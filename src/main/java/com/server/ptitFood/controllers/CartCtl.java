@@ -48,7 +48,8 @@ public class CartCtl {
                 cartItems.put(cartDto.getProductId(), cartDto.getQuantity());
             }
         } else {
-            return "redirect:/product/detail/" + cartDto.getProductId();
+            model.addAttribute("error", "Số lượng sản phẩm không đủ");
+            return "redirect:/product/" + cartDto.getAlias();
         }
 
         return "redirect:/cart/detail";

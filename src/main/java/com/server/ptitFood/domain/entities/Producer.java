@@ -2,6 +2,9 @@ package com.server.ptitFood.domain.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import java.sql.Date;
 @Data
@@ -16,15 +19,16 @@ public class Producer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false, name = "name", columnDefinition = "VARBINARY(600) NOT NULL")
+    @Column(nullable = false, name = "name", columnDefinition = "VARCHAR(255) NOT NULL")
     private String name;
 
-    @Column(nullable = false, name = "code", columnDefinition = "VARBINARY(600) NOT NULL")
+    @Column(nullable = false, name = "code", columnDefinition = "VARCHAR(255) NOT NULL")
     private String code;
 
-    @Column(nullable = false, name = "keyword", columnDefinition = "varbinary(600) NOT NULL")
+    @Column(nullable = false, name = "keyword", columnDefinition = "VARCHAR(255) NOT NULL")
     private String keyword;
 
+    @CreatedDate()
     @Column(nullable = false, name = "created", columnDefinition = "DATETIME")
     private Date created;
 
@@ -32,6 +36,7 @@ public class Producer {
     @JoinColumn(name = "created_by", referencedColumnName = "id")
     private Admin createdBy;
 
+    @LastModifiedDate()
     @Column(nullable = false, name = "updated", columnDefinition = "DATETIME")
     private Date updated;
 
@@ -41,5 +46,4 @@ public class Producer {
 
     @Column(nullable = false, name = "status", columnDefinition = "INT(1)")
     private Integer status;
-
 }

@@ -46,7 +46,7 @@ public class CategoryService {
                 categoryRepository.findById(dto.getParentId()).isPresent() ?
                         categoryRepository.findById(dto.getParentId()).get() : null
         );
-        category.setSortDesc(dto.getSortDesc());
+//        category.setSortDesc(dto.getSortDesc());
         category.setCreatedBy(id);
         category.setUpdatedBy(id);
         category.setStatus(dto.getStatus());
@@ -63,12 +63,13 @@ public class CategoryService {
         assert category != null;
         category.setName(dto.getName());
         category.setLink(dto.getLink());
-        category.setParentId(
-                dto.getParentId() != null &&
-                        categoryRepository.findById(dto.getParentId()).isPresent() ?
-                        categoryRepository.findById(dto.getParentId()).get() : null
-        );
-        category.setSortDesc(dto.getSortDesc());
+        if (dto.getParentId() != null) {
+            category.setParentId(
+                    categoryRepository.findById(dto.getParentId()).isPresent() ?
+                            categoryRepository.findById(dto.getParentId()).get() : null
+            );
+        }
+//        category.setSortDesc(dto.getSortDesc());
         category.setUpdatedBy(id);
         category.setStatus(dto.getStatus());
         categoryRepository.save(category);

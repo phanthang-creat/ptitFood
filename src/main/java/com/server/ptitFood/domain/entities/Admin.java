@@ -27,13 +27,13 @@ public class Admin implements UserDetails {
     @Column(nullable = false, name = "username", columnDefinition = "VARCHAR(255) UNIQUE NOT NULL")
     private String userName;
 
-    @Column(nullable = false, name = "password", length = 600, columnDefinition = "VARBINARY(600) NOT NULL")
+    @Column(nullable = false, name = "password", length = 600, columnDefinition = "VARCHAR(255) NOT NULL")
     private String password;
 
-    @Column(nullable = false, name = "email", columnDefinition = "VARBINARY(600) UNIQUE NOT NULL")
+    @Column(nullable = false, name = "email", columnDefinition = "VARCHAR(255) UNIQUE NOT NULL")
     private String email;
 
-    @Column(nullable = false, name = "phone", length = 15, columnDefinition = "VARBINARY(600)")
+    @Column(nullable = false, name = "phone", length = 15, columnDefinition = "VARCHAR(255)")
     private String phone;
 
     @Column(nullable = false, name = "address", columnDefinition = "VARCHAR(255)")
@@ -44,9 +44,6 @@ public class Admin implements UserDetails {
 
     @Column(nullable = false, name = "created", columnDefinition = "DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP")
     private Date created;
-
-    @Column(nullable = false, name = "trash", columnDefinition = "INT(1) DEFAULT 0")
-    private Integer trash;
 
     @Column(nullable = false, name = "status", columnDefinition = "INT(1) DEFAULT 1")
     private Integer status;
