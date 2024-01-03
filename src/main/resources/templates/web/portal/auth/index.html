@@ -40,7 +40,6 @@
                             <span style="color: red">Username is invalid</span>
                         </small>
                     </div>
-
                     <div class="form-group">
                         <label for="password">Password</label>
                         <input th:field="*{password}" type="password" class="form-control" name="password" id="password"
@@ -48,16 +47,16 @@
                         <small th:if="${#fields.hasErrors('password')}" id="passwordHid" class="form-text text-muted">
                             <span style="color: red">Password is invalid</span></small>
                     </div>
-                    <div class="g-recaptcha col-sm-5 pl-0"
-                         th:attr="data-sitekey=${@captchaSettings.getSite()}"
-                         data-callback='onSubmit'
-                         data-action="submit"
-                    ></div>
-                    <span id="captchaError" class="alert alert-danger col-sm-4"
-                          style="display:none"></span>
-                    <div th:if="${captchaFailed != '' && captchaFailed != null}" class="alert alert-danger" role="alert">
-                        <i>Captcha không hợp lệ</i>
-                    </div>
+<!--                    <div class="g-recaptcha col-sm-5 pl-0"-->
+<!--                         th:attr="data-sitekey=${@captchaSettings.getSite()}"-->
+<!--                         data-callback='onSubmit'-->
+<!--                         data-action="submit"-->
+<!--                    ></div>-->
+<!--                    <span id="captchaError" class="alert alert-danger col-sm-4"-->
+<!--                          style="display:none"></span>-->
+<!--                    <div th:if="${captchaFailed != '' && captchaFailed != null}" class="alert alert-danger" role="alert">-->
+<!--                        <i>Captcha không hợp lệ</i>-->
+<!--                    </div>-->
                     <div class="card-footer text-muted pl-0 pr-0">
                         <p class="text-right">
                             <a href="/auth/forgot-password" class="text-primary">Quên mật khẩu?</a>
@@ -80,7 +79,7 @@
             </div>
         </form>
     </div>
-    <script src='https://www.google.com/recaptcha/api.js'></script>
+<!--    <script src='https://www.google.com/recaptcha/api.js'></script>-->
 
 </section>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"

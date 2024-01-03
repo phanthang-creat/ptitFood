@@ -106,9 +106,9 @@ public class Authentication {
             throws UserAlreadyExistException
     {
         try {
-            String captcha = request.getParameter("g-recaptcha-response");
+//            String captcha = request.getParameter("g-recaptcha-response");
 
-            captchaService.processResponse(captcha);
+//            captchaService.processResponse(captcha);
 
             boolean result = userService.register(registerDto);
 
@@ -150,9 +150,9 @@ public class Authentication {
                 model.addAttribute("loginFailed", "Thao tác quá nhanh, vui lòng thử lại sau 1 phút");
                 return "web/portal/auth/index";
             }
-            String captcha = request.getParameter("g-recaptcha-response");
-
-            captchaService.processResponse(captcha);
+//            String captcha = request.getParameter("g-recaptcha-response");
+//
+//            captchaService.processResponse(captcha);
 
             Customer user = userService.login(loginDto);
 
@@ -173,10 +173,6 @@ public class Authentication {
             return "redirect:/";
 
         } catch (Exception e) {
-            if (e instanceof ReCaptchaInvalidException) {
-               model.addAttribute("captchaFailed", "Captcha invalid");
-            }
-
             model.addAttribute("loginFailed", "Login failed");
 
             model.addAttribute("account", new LoginDto(loginDto.getUsername()));

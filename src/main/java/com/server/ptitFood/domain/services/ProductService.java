@@ -140,5 +140,8 @@ public class ProductService {
     public void findProductByCategoryAndName() {
     }
 
+    public void updateNumberAndNumberBuy(Integer id, Integer number) {
+        productRepository.updateNumberAndNumberBuy(id, number);
+    }
 
 }

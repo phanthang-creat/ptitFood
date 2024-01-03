@@ -91,8 +91,8 @@ public class OrderService {
         }
 
         for (Product product : currentProductsInRepository) {
-            product.setNumberBuy(product.getNumberBuy() - carts.get(currentProductsInRepository.indexOf(product)).getQuantity());
-            productService.save(product);
+            int number = carts.get(currentProductsInRepository.indexOf(product)).getQuantity();
+            productService.updateNumberAndNumberBuy(product.getId(), number);
         }
 
         OrderStatus orderStatus = orderStatusRepository.getOrderStatusById(1);
@@ -143,11 +143,10 @@ public class OrderService {
         return order;
     }
 
-//    public PageImpl<Product> findAll(Pageable pageable) {
-//        List<Product> products = productRepository.findAll();
-//        return new PageImpl<>(products, pageable, products.size());
-//    }
-
+    // public PageImpl<Product> findAll(Pageable pageable) {
+    //  List<Product> products = productRepository.findAll();
+    //  return new PageImpl<>(products, pageable, products.size());
+    // }
 
     public PageImpl<Order> getAllOrderAdmin(Pageable pageable) {
         List<Order> orders = orderRepository.findAll();

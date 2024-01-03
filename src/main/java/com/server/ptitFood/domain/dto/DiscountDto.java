@@ -2,7 +2,6 @@ package com.server.ptitFood.domain.dto;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.joda.time.DateTime;
 
 import java.sql.Date;
 

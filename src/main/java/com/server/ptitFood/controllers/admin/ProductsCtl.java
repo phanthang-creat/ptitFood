@@ -49,7 +49,7 @@ public class ProductsCtl {
             dto.setId(item.getId());
             dto.setName(item.getName());
             return dto;
-        }).toList();
+        }).collect(java.util.stream.Collectors.toList());
     }
 
     @ModelAttribute("producers")
@@ -60,7 +60,7 @@ public class ProductsCtl {
             dto.setId(item.getId());
             dto.setName(item.getName());
             return dto;
-        }).toList();
+        }).collect(java.util.stream.Collectors.toList());
     }
 
     @Transactional

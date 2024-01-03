@@ -15,13 +15,11 @@ import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 import org.thymeleaf.templateresolver.FileTemplateResolver;
 import org.thymeleaf.templateresolver.ITemplateResolver;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Properties;
 
 @ComponentScan(basePackages = { "com.server.ptitfood.MailService" })
 @PropertySource(value={"classpath:application.properties"})
-public class EmailConfiguration {
+public class ViewConfiguration {
 
     @Value("${spring.mail.host}")
     private String mailServerHost;
