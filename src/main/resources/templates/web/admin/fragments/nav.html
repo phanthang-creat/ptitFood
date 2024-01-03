@@ -5,125 +5,115 @@
   lang="en"
   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 >
-  <head>
-    <title>Title</title>
-    <!-- Required meta tags -->
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
+<body>
+  <div class="sidebar pe-4 pb-3" th:fragment="nav">
+    <nav class="navbar bg-light navbar-light">
+      <a href="/admin/home" class="navbar-brand mx-4 mb-3">
+        <h3 class="text-primary"><i class="fa fa-hashtag me-2"></i>PTITFOOD</h3>
+      </a>
+      <div class="navbar-nav w-100">
+        <a href="/admin/home" class="nav-item nav-link"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
+        <a href="/admin/customers" class="nav-item nav-link"><i class="fa fa-solid fa-users"></i>Khách hàng</a>
+        <a href="/admin/products" class="nav-item nav-link"><i class="fa fa-keyboard me-2"></i>Sản phẩm</a>
+        <a href="/admin/producers" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Nhà cung cấp</a>
+        <a href="/admin/categories" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Danh mục sản phẩm</a>
+        <a href="/admin/orders" class="nav-item nav-link"><i class="fa fa-regular fa-file"></i>Đơn hàng</a>
+        <a href="/admin/discounts" class="nav-item nav-link"><i class="fa fa-solid fa-tag"></i>Mã giảm giá</a>
+        <a href="/admin/discounts" class="nav-item nav-link">
 
-    <!-- Bootstrap CSS -->
-    <link
-      rel="stylesheet"
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
-      crossorigin="anonymous"
-    />
-    <style>
-      .nav-item {
-        padding: 0 !important;
-        display: flex !important;
-        justify-content: center;
-        align-items: center;
-      }
-    </style>
-  </head>
+        <div class="my-2 my-lg-0">
+          <!--                    logout -->
+          <form th:action="@{/auth/logout}" method="post">
+            <button type="submit" class="btn my-2 my-sm-0 bg-transparent me-2">
+              <img src="/static/images/logout.png" alt="logout" style="height: 16px; width: 16px;">
+            </button>
+            <span>
+              Đăng xuất
+            </span>
 
-  <body>
-    <div th:fragment="nav" class="sticky-top" >
-      <nav
-        class="navbar navbar-expand-sm navbar-light sticky-top bg-light"
-      >
-        <a class="navbar-brand" href="#">
-			<img id="image-1" alt=""  width="50px" src="/static/images/logo2.png"/>
-		</a>
-        <button
-          class="navbar-toggler d-lg-none"
-          type="button"
-          data-toggle="collapse"
-          data-target="#collapsibleNavId"
-          aria-controls="collapsibleNavId"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="collapsibleNavId">
-          <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-            <li class="nav-item active">
-              <a class="nav-link" href="#"
-                >Home <span class="sr-only">(current)</span></a
-              >
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" th:href="@{/admin/customers}"
-                >Khách hàng</a
-              >
-            </li>
-            <li  sec:authorize="hasAuthority('ADMIN')" class="nav-item">
-              <a class="nav-link" th:href="@{/admin/products}"
-                >Sản phẩm</a
-              >
-            </li>
-            <li  sec:authorize="hasAuthority('ADMIN')" class="nav-item">
-              <a class="nav-link" th:href="@{/admin/categories}"
-              >Danh mục</a>
-            </li>
-            <li  sec:authorize="hasAuthority('ADMIN')" class="nav-item">
-              <a class="nav-link" th:href="@{/admin/producers}"
-              >Nhà cung cấp</a
-              >
-            </li>
-            <li  sec:authorize="hasAuthority('ADMIN')" class="nav-item">
-              <a class="nav-link" th:href="@{/admin/discounts}"
-              >Discount</a
-              >
-            </li>
-            <li  sec:authorize="hasAuthority('ADMIN')" class="nav-item">
-              <a class="nav-link" th:href="@{/admin/orders}"
-              >Orders</a
-              >
-            </li>
-          </ul>
-          <div class="navbar-text">
-            <span sec:authentication="name"></span>
-            <span sec:authentication="principal.authorities">Roles</span>
-          </div>
-          <div class="navbar-text ml-2">
-<!--            <div sec:authorize="isAuthenticated()">-->
-<!--              -->
-<!--            </div>-->
-          </div>
-          <div class="my-2 my-lg-0">
-            <!--                    logout -->
-            <form th:action="@{/auth/logout}" method="post">
-              <button type="submit" class="btn my-2 my-sm-0 bg-transparent">
-                <img src="/static/images/logout.png" alt="logout" style="height: 16px; width: 16px;">
-              </button>
-            </form>
-          </div>
+          </form>
         </div>
-      </nav>
-    </div>
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script
-      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-      crossorigin="anonymous"
-    ></script>
-  </body>
+        </a>
+      </div>
+    </nav>
+  </div>
+<!--  <div class="sticky-top" >-->
+<!--    <nav-->
+<!--      class="navbar navbar-expand-sm navbar-light sticky-top bg-light"-->
+<!--    >-->
+<!--      <a class="navbar-brand" href="#">-->
+<!--          <img id="image-1" alt=""  width="50px" src="/static/images/logo2.png"/>-->
+<!--      </a>-->
+<!--      <button-->
+<!--        class="navbar-toggler d-lg-none"-->
+<!--        type="button"-->
+<!--        data-toggle="collapse"-->
+<!--        data-target="#collapsibleNavId"-->
+<!--        aria-controls="collapsibleNavId"-->
+<!--        aria-expanded="false"-->
+<!--        aria-label="Toggle navigation"-->
+<!--      >-->
+<!--        <span class="navbar-toggler-icon"></span>-->
+<!--      </button>-->
+
+<!--      <div class="collapse navbar-collapse" id="collapsibleNavId">-->
+<!--        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">-->
+<!--          <li class="nav-item active">-->
+<!--            <a class="nav-link" href="#"-->
+<!--              >Home <span class="sr-only">(current)</span></a-->
+<!--            >-->
+<!--          </li>-->
+<!--          <li class="nav-item">-->
+<!--            <a class="nav-link" th:href="@{/admin/customers}"-->
+<!--              >Khách hàng</a-->
+<!--            >-->
+<!--          </li>-->
+<!--          <li  sec:authorize="hasAuthority('ADMIN')" class="nav-item">-->
+<!--            <a class="nav-link" th:href="@{/admin/products}"-->
+<!--              >Sản phẩm</a-->
+<!--            >-->
+<!--          </li>-->
+<!--          <li  sec:authorize="hasAuthority('ADMIN')" class="nav-item">-->
+<!--            <a class="nav-link" th:href="@{/admin/categories}"-->
+<!--            >Danh mục</a>-->
+<!--          </li>-->
+<!--          <li  sec:authorize="hasAuthority('ADMIN')" class="nav-item">-->
+<!--            <a class="nav-link" th:href="@{/admin/producers}"-->
+<!--            >Nhà cung cấp</a-->
+<!--            >-->
+<!--          </li>-->
+<!--          <li  sec:authorize="hasAuthority('ADMIN')" class="nav-item">-->
+<!--            <a class="nav-link" th:href="@{/admin/discounts}"-->
+<!--            >Discount</a-->
+<!--            >-->
+<!--          </li>-->
+<!--          <li  sec:authorize="hasAuthority('ADMIN')" class="nav-item">-->
+<!--            <a class="nav-link" th:href="@{/admin/orders}"-->
+<!--            >Orders</a-->
+<!--            >-->
+<!--          </li>-->
+<!--        </ul>-->
+<!--        <div class="navbar-text">-->
+<!--          <span sec:authentication="name"></span>-->
+<!--          <span sec:authentication="principal.authorities">Roles</span>-->
+<!--        </div>-->
+<!--        <div class="navbar-text ml-2">-->
+<!--&lt;!&ndash;            <div sec:authorize="isAuthenticated()">&ndash;&gt;-->
+<!--&lt;!&ndash;              &ndash;&gt;-->
+<!--&lt;!&ndash;            </div>&ndash;&gt;-->
+<!--        </div>-->
+<!--        <div class="my-2 my-lg-0">-->
+<!--          &lt;!&ndash;                    logout &ndash;&gt;-->
+<!--          <form th:action="@{/auth/logout}" method="post">-->
+<!--            <button type="submit" class="btn my-2 my-sm-0 bg-transparent">-->
+<!--              <img src="/static/images/logout.png" alt="logout" style="height: 16px; width: 16px;">-->
+<!--            </button>-->
+<!--          </form>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </nav>-->
+<!--  </div>-->
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+</body>
 </html>

@@ -8,7 +8,7 @@
 </head>
 
 <body>
-<section class="row" layout:fragment="content">
+<section class="content" layout:fragment="content">
     <div class="col mt-4">
         <form th:object="${currentDto}" onsubmit="submitForm()" id="form" method="post" th:action="@{/admin/products/add}">
             <div class="card">
@@ -174,7 +174,7 @@
                 </div>
                 <div class="card-footer text-muted">
                     <button type="reset" class="btn btn-secondary">Reset</button>
-                    <a th:href="@{/admin/producers}" class="btn btn-success text-white">Danh sách khách hàng</a>
+                    <a th:href="@{/admin/products}" class="btn btn-success text-white">Danh sách sản phẩm</a>
                     <button class="btn btn-primary" onclick="submitForm()" type="button">
                         <i class="fas fa-save"></i>
                         <span th:if="${currentDto.isEdit}">Cập nhập</span>

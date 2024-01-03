@@ -58,16 +58,7 @@
 </head>
 <body>
 <main class="container" style="font-size:14px;">
-    <header class="row">
-        <div class="col">
-            <!--          <header th:replace="~{admin/fragments/header :: header}" >Header</header>-->
-        </div>
-    </header>
-    <nav class="row">
-        <div class="col">
-            <div th:replace="~{web/admin/fragments/nav :: nav}"></div>
-        </div>
-    </nav>
+    <div th:replace="~{web/admin/fragments/nav :: nav}"></div>
     <section class="row">
         <div class="col">
             <div layout:fragment="content"></div>

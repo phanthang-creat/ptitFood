@@ -8,7 +8,7 @@
 </head>
 
 <body>
-<section class="row" layout:fragment="content">
+<section class="content" layout:fragment="content">
   <div class="col mt-4">
     <form th:action="@{/admin/categories/edit/{id}(id=${currentDto.getId()})}" method="post" th:object="${currentDto}">
       <div class="card">

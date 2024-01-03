@@ -6,7 +6,7 @@
     <title>Đơn hàng</title>
 </head>
 <body>
-    <section class="h-100 gradient-custom" layout:fragment="content">
+    <section class="content" layout:fragment="content">
         <div class="col mt-4">
             <form th:action="@{/admin/orders/edit/{id}(id=${order.id})}" method="post" th:object="${order}">
                 <div class="card">

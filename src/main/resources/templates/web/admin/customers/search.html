@@ -7,22 +7,13 @@
   layout:decorate="~{web/admin/dashBoardLayout.html}">
   <head>
     <title>Quản lý khách hàng</title>
-
-    <link rel="stylesheet" href="/static/css/manager.css" />
   </head>
   <body>
-    <section class="row" layout:fragment="content">
+    <section class="content" layout:fragment="content">
       <div class="col mt-4">
         <div class="card">
           <div class="card-header">Danh sách khách hàng</div>
           <div class="card-body">
-            <div
-              th:if="${message != null}"
-              class="alert alert-primary"
-              role="alert"
-            >
-              <i>[[${message}]]</i>
-            </div>
             <div class="row my-2">
               <div class="col">
                 <form th:action="@{/admin/customers}">
@@ -39,13 +30,6 @@
                     <button class="btn btn-outline-primary ml-1">Tìm kiếm</button>
                   </div>
                 </form>
-                <div class="float-right">
-                  <a
-                    class="btn btn-outline-primary"
-                    th:href="@{/admin/customers/add}"
-                    >Thêm khách hàng</a
-                  >
-                </div>
               </div>
             </div>
             <div class="row" th:if="${!accountPage.hasContent()}">
