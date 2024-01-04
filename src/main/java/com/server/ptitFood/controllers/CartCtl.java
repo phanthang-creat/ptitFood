@@ -147,11 +147,11 @@ public class CartCtl {
             HttpSession session,
             OrderDto orderDto
             ) {
-        HashMap<Integer, Integer> cartItems = session.getAttribute("cart") == null ?
-                new HashMap<>() : (HashMap<Integer, Integer>) session.getAttribute("cart");
-        cartItems.clear();
-        session.setAttribute("cart", cartItems);
         if (orderService.createOrder(orderDto)) {
+            HashMap<Integer, Integer> cartItems = session.getAttribute("cart") == null ?
+                    new HashMap<>() : (HashMap<Integer, Integer>) session.getAttribute("cart");
+            cartItems.clear();
+            session.setAttribute("cart", cartItems);
             return "redirect:/cart/success";
         } else {
             return "redirect:/cart/checkout";

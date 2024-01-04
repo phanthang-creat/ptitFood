@@ -28,12 +28,7 @@ public class AdminHome {
         model.addAttribute("todayCount", dashboardService.todayCount());
         model.addAttribute("todayMoney", dashboardService.todayMoney());
 
-        List<Object[]> listMoneyByMonth = dashboardService.getMoneyByMonth();
-        for (Object[] objects : listMoneyByMonth) {
-            System.out.println(objects[0]);
-            System.out.println(objects[1]);
-            System.out.println(objects[2]);
-        }
+        List<Long> listMoneyByMonth = dashboardService.getMoneyByMonth();
         model.addAttribute("listMoneyByMonth", listMoneyByMonth);
         return "web/admin/home/dashboard";
     }

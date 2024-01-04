@@ -27,6 +27,9 @@
                                                aria-describedby="idHid" placeholder="Mã nhà cung cấp..." readonly th:field="*{id}" />
               </div>
             </div>
+            <input type="hidden" name="avatar" th:value="${product.getAvatar()}">
+            <input type="hidden" name="img" th:value="${product.getImg()}">
+
             <div class="col-6">
               <div class="form-outline">
                 <label class="form-label" for="name">Tên</label>

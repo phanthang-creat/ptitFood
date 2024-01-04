@@ -59,7 +59,7 @@ public class DashboardService {
         return productRepository.count();
     }
 
-    public List<Object[]> getMoneyByMonth() {
-        return orderRepository.getMoneyByMonth2();
+    public List<Long> getMoneyByMonth() {
+        return orderRepository.getMoneyByMonth();
     }
 }

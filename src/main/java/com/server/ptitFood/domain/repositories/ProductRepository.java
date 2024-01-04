@@ -53,7 +53,7 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     Product findProductByAliasAndStatus(String alias, Integer status);
 
     // update number, number_buy of product
-    @Query(value = "update db_product set number = number - :number, number_buy = number_buy + :number where id = :id", nativeQuery = true)
+    @Query(value = "update db_product set number = number - :number, number_buy = number_buy - :number where id = :id", nativeQuery = true)
     void updateNumberAndNumberBuy(
             @Param("id") Integer id,
             @Param("number") Integer number

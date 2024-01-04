@@ -258,22 +258,23 @@ public class UserService {
 
     @Transactional
     public void updatePassword(UpdatePasswordDto updatePasswordDto) throws UsernameOrPasswordNotValid {
+        System.out.println(updatePasswordDto);
         if (
                 updatePasswordDto.getOldPassword() == null ||
-                        updatePasswordDto.getNewPassword() == null ||
-                        updatePasswordDto.getConfirmPassword() == null ||
-                        updatePasswordDto.getOldPassword().isEmpty() ||
-                        updatePasswordDto.getNewPassword().isEmpty() ||
-                        updatePasswordDto.getConfirmPassword().isEmpty()
+                updatePasswordDto.getNewPassword() == null ||
+                updatePasswordDto.getConfirmPassword() == null ||
+                updatePasswordDto.getOldPassword().isEmpty() ||
+                updatePasswordDto.getNewPassword().isEmpty() ||
+                updatePasswordDto.getConfirmPassword().isEmpty()
         ) {
             throw new UsernameOrPasswordNotValid("Mật khẩu không hợp lệ");
         }
         if (!updatePasswordDto.getNewPassword().equals(updatePasswordDto.getConfirmPassword())) {
-            throw new UsernameOrPasswordNotValid("Mật khẩu không hợp lệ");
+            throw new UsernameOrPasswordNotValid("Mật khẩu mới không trùng khớp");
         }
         Customer user = getCurrentUser();
         if (!EncodingHelper.hashPassword(updatePasswordDto.getOldPassword()).equals(user.getPassword())) {
-            throw new UsernameOrPasswordNotValid("Mật khẩu không hợp lệ");
+            throw new UsernameOrPasswordNotValid("Mật khẩu cũ không đúng");
         }
         user.setPassword(EncodingHelper.hashPassword(updatePasswordDto.getNewPassword()));
         userRepository.save(user);
